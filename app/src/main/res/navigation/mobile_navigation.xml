@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/strategy">
+
+        <fragment
+            android:id="@+id/strategy"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="strategy" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/usp"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment">
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="usp" />
+        </fragment>
+        <fragment
+            android:id="@+id/my_believe"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="my_believe" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/kpi"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="kpi" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/website"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="website" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/app"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="app" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/sem"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="sem" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/ads"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="ads" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/google_business"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="google_business" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/content_marketing"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="content_marketing" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/posts"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="posts" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/mail"
+            android:name="com.icstudios.digitizer.testFragment"
+            android:label="tasker"
+            tools:layout="@layout/test_fragment" >
+            <argument
+                android:name="data"
+                app:argType="string"
+                android:defaultValue="mail" />
+        </fragment>
+
+</navigation>
