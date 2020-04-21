@@ -89,7 +89,7 @@ public class mainNav extends AppCompatActivity{
         askPremission();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("יצירת הנוכחות הדיגיטלית");
+        toolbar.setTitle("Digitizer");
         setSupportActionBar(toolbar);
 
         data = (appData) getApplication();

@@ -64,15 +64,7 @@ public class ViewMaker {
 
         final LinearLayout ll = new LinearLayout(context);
         ll.setOrientation(LinearLayout.VERTICAL);
-
-        final int sdk = android.os.Build.VERSION.SDK_INT;
-        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            ll.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.note5) );
-        } else {
-            //ll.setBackground(ContextCompat.getDrawable(context, R.drawable.note7));
-            ll.setBackgroundResource(R.color.platte4);
-            ll.setBackgroundResource(R.color.platte1);
-        }
+        ll.setBackgroundResource(R.color.platte1);
 
         sv.addView(ll);
 

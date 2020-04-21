@@ -44,7 +44,8 @@ public class taskView {
         if(cbsList!=null)
             for (CheckBox cb : cbsList)
             {
-                cb.setEnabled(enable);
+                if(cb!=null)
+                    cb.setEnabled(enable);
             }
 
         if(et!=null&&et.size()>0)
@@ -259,7 +260,7 @@ public class taskView {
 
         LinearLayout.LayoutParams noteParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        noteParams.setMargins(40, 60, 40, 80);
+        noteParams.setMargins(40, 60, 40, 300);
 
         LinearLayout.LayoutParams innerNoteParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
