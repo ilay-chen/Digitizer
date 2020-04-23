@@ -149,11 +149,13 @@ public class appData extends Application {
     public static void checkProgress(Context context, int customPos, Activity activity)
     {
         readData(context);
-        int currentId = customPos;
-        if(currentId==-1)
-            currentId = checkTopicPos();
+        //int currentId = customPos;
+        //if(currentId==-1)
+        int currentId = checkTopicPos();
         if(currentId==-1) return;
         topicTasks topic = allTasks.allTopics.get(currentId);
+
+        if(topic.undoneTasks()==0) return;
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTimeInMillis(topic.getTime());
@@ -163,8 +165,6 @@ public class appData extends Application {
         long seconds = (calendar1.getTimeInMillis() - calendar2.getTimeInMillis()) / 1000;
         int hours = (int) (seconds / 3600);
         int days = hours/24;
-
-        updateCalendarEvent(topic.getId(), context, activity);
 
         if(hours > 24) {
             if (topic.undoneTasks() > 0) {

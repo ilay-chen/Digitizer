@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import static com.google.android.gms.common.util.CollectionUtils.listOf;
 
 public class taskView {
-    public TextView tv, sc;
+    public TextView tv;
     public CheckBox task;
     public CheckBox [] cbsList;
     public ArrayList<EditText> et;

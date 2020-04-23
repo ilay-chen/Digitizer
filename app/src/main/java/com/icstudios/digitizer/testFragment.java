@@ -1,6 +1,7 @@
 package com.icstudios.digitizer;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,12 +12,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class testFragment extends Fragment {
 
@@ -26,6 +29,7 @@ public class testFragment extends Fragment {
     ArrayList<LinearLayout> allLayouts;
     String []titles;
     String currentTopic;
+    Button next, previous;
 
         public testFragment() {
         }
@@ -50,7 +54,28 @@ public class testFragment extends Fragment {
             mViewPager = ((Activity)getContext()).findViewById(R.id.viewPager2);
 
             TabLayout tabLayout = (TabLayout) ((Activity)getContext()).findViewById(R.id.tabDots);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                //tabLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
             tabLayout.setupWithViewPager(mViewPager, true);
+
+            next = ((Activity)getContext()).findViewById(R.id.next);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mViewPager.getCurrentItem() + 1 < allLayouts.size())
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                }
+            });
+
+            previous = ((Activity)getContext()).findViewById(R.id.previous);
+            previous.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mViewPager.getCurrentItem() - 1 >= 0)
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+                }
+            });
 
             ScrollView []svs = new ScrollView[vm.allLayouts.size()];
             allLayouts = vm.getViews();
@@ -59,6 +84,8 @@ public class testFragment extends Fragment {
             for(int i = 0; i <allLayouts.size(); i++)
                 titles[i] = "";
 
+            if (isRTL())
+                mViewPager.setRotationY(180);
 
             mViewPager.setAdapter(new PagerAdapter() {
 
@@ -68,6 +95,8 @@ public class testFragment extends Fragment {
                     //ViewGroup layout = (ViewGroup) inflater.inflate(layouts[position], container, false);
 
                     ViewGroup layout = (ViewGroup)  allLayouts.get(position);
+                    if (isRTL())
+                        layout.setRotationY(180);
 
                     de(layout);
                     container.addView(layout);
@@ -95,9 +124,29 @@ public class testFragment extends Fragment {
                 }
             });
 
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                public void onPageScrollStateChanged(int state) {
+
+                }
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                public void onPageSelected(int position) {
+                   if(position == allLayouts.size()-1)
+                       next.setEnabled(false);
+                   else if(position==0)
+                       previous.setEnabled(false);
+                   else {
+                       next.setEnabled(true);
+                       previous.setEnabled(true);
+                   }
+                }
+            });
 
             mViewPager.setOffscreenPageLimit(10);
             mViewPager.setCurrentItem(currentTab(currentTopic), false);
+
             //container.addView(vm.drawPage());
             //ImageView im = (ImageView) rootView.findViewById(R.id.mainnews);
             //im.getLayoutParams().height = 23;
@@ -105,6 +154,16 @@ public class testFragment extends Fragment {
             //return vm.drawPage();
             return null;
         }
+
+    public static boolean isRTL() {
+        return isRTL(Locale.getDefault());
+    }
+
+    public static boolean isRTL(Locale locale) {
+        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+    }
 
         public void de(View v)
         {

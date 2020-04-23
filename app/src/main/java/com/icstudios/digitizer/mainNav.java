@@ -119,7 +119,8 @@ public class mainNav extends AppCompatActivity{
 
         final View hView =  navigationView.getHeaderView(0);
         TextView nav_user = (TextView)hView.findViewById(R.id.textView);
-        nav_user.setText(user.getDisplayName());
+        String name = user.getDisplayName();
+        nav_user.setText(name);
 
         Button login = (Button) hView.findViewById(R.id.logout);
 

@@ -28,6 +28,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ViewMaker {
     
@@ -46,8 +48,8 @@ public class ViewMaker {
 
     public ViewMaker(Context context, String task) {
         this.context = context;
-        data = (appData) mainNav.data;
-        allTask = data.getAllTasks();
+        data = mainNav.data;
+        allTask = appData.getAllTasks();
 
 
         currentTopic = allTask.getTopicById(task);
@@ -72,20 +74,18 @@ public class ViewMaker {
                 "GveretLevin.ttf");
 
         Toolbar toolbar = ((Activity)context).findViewById(R.id.toolbar);
-        toolbar.setTitle(currentTopic.title);
+        toolbar.setTitle(currentTopic.title + ", "+ timeToFinish(currentTopic));
         toolbar.setBackgroundResource(R.drawable.upper);
 
         fab = ((Activity)context).findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 appData.setCurrentTopic(context, (Activity)context);
             }
         });
 
-
-        if(data.checkTopicPos()<=currentPos)
+        if(appData.checkTopicPos()<=currentPos)
             fab.setVisibility(View.GONE);
 
         allLayouts.add(new taskView(new TextView(context), context, currentTopic.subtitle).inn);
@@ -121,7 +121,7 @@ public class ViewMaker {
 
             //allTv[i].inn.setPadding(50,80,50,80);
             allLayouts.add(allTv[i].inn);
-            ll.addView(allTv[i].inn);
+            //ll.addView(allTv[i].inn);
             //lls[i] = new LinearLayout(context);
             //lls[i].setOrientation(LinearLayout.VERTICAL);
             //ll.addView(lls[i]);
@@ -143,7 +143,28 @@ public class ViewMaker {
 
         //setContentView(sv);
 
+        nextPage();
+
         return allLayouts;
+    }
+
+    public String timeToFinish(topicTasks topic)
+    {
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(topic.getTime());
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(System.currentTimeMillis());
+
+        if (topic.undoneTasks()==0)
+            return data.getString(R.string.time_done);
+
+        long seconds = (calendar1.getTimeInMillis() - calendar2.getTimeInMillis()) / 1000;
+        int hours = (int) (seconds / 3600);
+        int days = hours/24;
+
+        if (days == 0)
+            return hours + " " + context.getString(R.string.hours);
+        else return days + " " + context.getString(R.string.days);
     }
 
     public Boolean checkEditTextNotNull(ArrayList<EditText> ets)
@@ -158,11 +179,7 @@ public class ViewMaker {
     public Boolean checkRadioNotNull(int i)
     {
         if(((RadioButton)allTv[i].radiogroup.getChildAt(allTv[i].radioSize-1)).isChecked()) {
-            if (allTv[i].et.size()!= 0 && allTv[i].et.get(0).getText() != null && !allTv[i].et.get(0).getText().toString().equals("")) {
-                return true;
-            } else {
-                return false;
-            }
+            return allTv[i].et.size() != 0 && allTv[i].et.get(0).getText() != null && !allTv[i].et.get(0).getText().toString().equals("");
         }
         else {
             for (int j = 0; j < allTv[i].radioSize - 1; j++) {
@@ -360,7 +377,7 @@ public class ViewMaker {
                     allTask.setDone(currentPos, i, allTv[i].task.isChecked(), result);
                 }
 
-                data.saveData(context);
+                appData.saveData(context);
                 buttonView.getTag();
                 nextPage();
 
@@ -474,7 +491,7 @@ public class ViewMaker {
         NavigationView navigationView = ((Activity)context).findViewById(R.id.nav_view);
         final Menu menuNav=navigationView.getMenu();
         for(int i = 0; i < /*menuNav.size() data.checkTopicPos()*/appData.allTasks.getAllTopics().size() ; i++) {
-            if((!appData.allTasks.getAllTopics().get(i).getToDo() || appData.allTasks.getAllTopics().get(i).undoneTasks() > 0) &&  i != data.checkTopicPos())
+            if((!appData.allTasks.getAllTopics().get(i).getToDo() || appData.allTasks.getAllTopics().get(i).undoneTasks() > 0) &&  i != appData.checkTopicPos())
                 menuNav.getItem(i).setEnabled(false);
         }
     }
@@ -554,7 +571,8 @@ public class ViewMaker {
                 allTv[i].et.get(0).setText(be);
             }
         }
-        allTv[i].tv.setText(Html.fromHtml(text));
+        if(!text.equals("empty"))
+            allTv[i].tv.setText(Html.fromHtml(text));
         allTv[i].inn.invalidate();
     }
 
@@ -562,7 +580,11 @@ public class ViewMaker {
     {
         if(currentTopic.undoneTasks()==0)
         {
+            if (currentPos+1 < appData.ids.length){
+                //TODO finish all!!
+            }
             appData.deleteCalendarEvent(appData.ids[currentPos], context, (Activity)context);
+            appData.updateCalendarEvent(appData.ids[currentPos+1], context, (Activity)context);
 
             NavigationView navigationView = ((Activity)context).findViewById(R.id.nav_view);
             Menu menuNav=navigationView.getMenu();
@@ -572,9 +594,9 @@ public class ViewMaker {
             {
                 i++;
             }
-            navigationView.getMenu().getItem(data.checkTopicPos()).setEnabled(true);
+            navigationView.getMenu().getItem(appData.checkTopicPos()).setEnabled(true);
 
-            appData.checkProgress(context, currentPos, (Activity)context);
+            //appData.checkProgress(context, currentPos, (Activity)context);
 
             fab.setVisibility(View.VISIBLE);
         }
@@ -595,7 +617,7 @@ public class ViewMaker {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Continue with delete operation
-                        data.initTasks(context);
+                        appData.initTasks(context);
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)

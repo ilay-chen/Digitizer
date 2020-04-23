@@ -127,7 +127,7 @@ public class topicTasks implements Serializable {
         Date d = new Date(timestampLong);
         Calendar c = Calendar.getInstance();
         c.setTime(d);
-        c.setTimeZone(TimeZone.getTimeZone("Asia/Jerusalem"));
+        c.setTimeZone(TimeZone.getDefault());
         scheduledDate = c;
         return scheduledDate;
     }

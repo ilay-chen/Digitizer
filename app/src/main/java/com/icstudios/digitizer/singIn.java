@@ -497,7 +497,7 @@ public class singIn extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             autoSingIn();
-            appData.checkProgress(context, -1, activity);
+            //appData.checkProgress(context, -1, activity);
         }
 
         @Override
