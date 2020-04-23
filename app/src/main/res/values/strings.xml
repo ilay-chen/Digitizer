@@ -996,6 +996,11 @@ As you work on your business, we set tasks together. So that we can help you kee
     <string name="next_button">next</string>
     <string name="time_done">done</string>
     <string name="logout_text">log out</string>
-
+    <string name="error_save_files">We were unable to save the files</string>
+    <string name="error_save_files_title">File processing error</string>
+    <string name="calendar_syncing">Syncing with calendar..</string>
+    <string name="mail_choose">Selected Email: </string>
+    <string name="choose_mail_toast">You have to choose mail first!</string>
+    <string name="permissions_button">Permissions</string>
 
 </resources>

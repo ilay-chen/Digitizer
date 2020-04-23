@@ -76,20 +76,10 @@ public class singIn extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_firebase_ui);
 
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
-
         context = this;
 
         SharedPreferences sharedPref = this.getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
-        Boolean firstTime = sharedPref.getBoolean("firstTime", true);
-
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = false; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        boolean firstTime = sharedPref.getBoolean("firstTime", true);
 
         if(firstTime) {
 
@@ -97,7 +87,7 @@ public class singIn extends AppCompatActivity {
             a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(a);
 
-            finish();
+            finishAffinity();
 
             /*
             findViewById(R.id.layoutIn).post(new Runnable() {

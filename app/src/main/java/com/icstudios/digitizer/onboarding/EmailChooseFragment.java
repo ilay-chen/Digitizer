@@ -3,6 +3,7 @@ package com.icstudios.digitizer.onboarding;
 
 import android.accounts.AccountManager;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,6 +52,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
@@ -59,6 +61,7 @@ import static com.icstudios.digitizer.mainNav.REQUEST_ACCOUNT_PICKER;
 import static com.icstudios.digitizer.mainNav.REQUEST_AUTHORIZATION;
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
 import static com.icstudios.digitizer.singIn.RC_SIGN_IN;
+import static com.icstudios.digitizer.singIn.context;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +71,7 @@ public class EmailChooseFragment extends Fragment {
     private Button mButtonNext, mButtonPrevious, mButtonChoose;
     private LinearLayout layout;
     TextView email;
+    ProgressDialog mProgress;
 
     public static com.google.api.services.calendar.Calendar mService = null;
     private static final String PREF_ACCOUNT_NAME = "accountName";
@@ -84,15 +88,31 @@ public class EmailChooseFragment extends Fragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(20,20,20,20);
 
+        LinearLayout.LayoutParams noteParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        noteParams.setMargins(40, 60, 40, 300);
+
+        LinearLayout.LayoutParams innerNoteParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        innerNoteParams.setMargins(60, 270, 60, 80);
+
+        LinearLayout innerNote = new LinearLayout(getContext());
+        innerNote.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout noteLayout = new LinearLayout(getContext());
+        noteLayout.setOrientation(LinearLayout.VERTICAL);
+        noteLayout.setBackgroundResource(R.drawable.pinnote7);
+
         TextView title = new TextView(getActivity());
         title.setText(R.string.mail_choose_title);
         title.setPadding(0,10,0,30);
-        layout.addView(title);
 
         TextView explanation = new TextView(getContext());
         explanation.setText(R.string.mail_choose_expl);
         explanation.setPadding(0,10,0,30);
-        layout.addView(explanation);
+
+        mProgress = new ProgressDialog(getContext());
+        mProgress.setMessage(getString(R.string.calendar_syncing));
 
         String accountName = (getActivity()).getPreferences(MODE_PRIVATE)
                 .getString(PREF_ACCOUNT_NAME, getString(R.string.no_mail));
@@ -100,88 +120,57 @@ public class EmailChooseFragment extends Fragment {
         email = new TextView(getContext());
         email.setText(accountName);
         email.setPadding(0,10,0,30);
-        layout.addView(email);
-
-        LinearLayout nav = new LinearLayout(getContext());
-        //nav.setOrientation(LinearLayout.HORIZONTAL);
 
         mButtonChoose = new Button(getContext());
         mButtonChoose.setText(R.string.choose_mail);
+        mButtonChoose.setBackgroundResource(R.drawable.button_skype_rectangle_background);
         mButtonChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getResultsFromApi();
             }
         });
-        layout.addView(mButtonChoose);
 
-        mButtonNext = new Button(getContext());
-        mButtonNext.setText("next");
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean allSet = true;
-                if (allSet) {
-                    //(activity as ViewPager2).setCurrentItem(0,true)
-                    ((OnboardingActivity)getActivity()).onProgress(3);
-                    OnboardingActivity.Companion.getViewPager().setCurrentItem(2, true);
-                }
-                else
-                {
-                    Toast.makeText(getContext(),"you have to choose all the settings!",Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        innerNote.addView(title);
+        innerNote.addView(explanation);
+        innerNote.addView(email);
+        innerNote.addView(mButtonChoose);
 
-        mButtonPrevious = new Button(getContext());
-        mButtonPrevious.setText("Previous");
-        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OnboardingActivity.Companion.getViewPager().setCurrentItem(0, true);
-            }
-        });
-        nav.addView(mButtonPrevious);
-        nav.addView(mButtonNext);
-        layout.addView(nav);
+        noteLayout.addView(innerNote, innerNoteParams);
+        layout.addView(noteLayout, noteParams);
 
-        //rootView.add
-        /*
-        mButtonNext = rootView.findViewById(R.id.button_next)
-        mButtonNext.setOnClickListener(View.OnClickListener { view ->
-            (activity as ViewPagerNavigation).onProgress(3)
-        })
-        R.id.radio_button_smile_interval_long
+//        LinearLayout nav = new LinearLayout(getContext());
+//        //nav.setOrientation(LinearLayout.HORIZONTAL);
+//
+//        mButtonNext = new Button(getContext());
+//        mButtonNext.setText("next");
+//        mButtonNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Boolean allSet = true;
+//                if (allSet) {
+//                    //(activity as ViewPager2).setCurrentItem(0,true)
+//                    ((OnboardingActivity)getActivity()).nextPage();
+//                }
+//                else
+//                {
+//                    Toast.makeText(getContext(),"you have to choose all the settings!",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
+//
+//        mButtonPrevious = new Button(getContext());
+//        mButtonPrevious.setText("Previous");
+//        mButtonPrevious.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OnboardingActivity.Companion.getViewPager().setCurrentItem(0, true);
+//            }
+//        });
+//        nav.addView(mButtonPrevious);
+//        nav.addView(mButtonNext);
+//        layout.addView(nav);
 
-
-        mRadioGroupSmileInterval.setOnCheckedChangeListener { group, checkedId ->
-            var smileIntervalInMinutes = 0
-            when (checkedId)
-            {
-                R.id.radio_button_smile_interval_short ->
-                {
-                    smileIntervalInMinutes = resources.getInteger(R.integer.smile_interval_short)
-                }
-                R.id.radio_button_smile_interval_medium ->
-                {
-                    smileIntervalInMinutes = resources.getInteger(R.integer.smile_interval_medium)
-                }
-                R.id.radio_button_smile_interval_long ->
-                {
-                    smileIntervalInMinutes = resources.getInteger(R.integer.smile_interval_long)
-                }
-            }
-            if (smileIntervalInMinutes == 0)
-            {
-                throw Exception("Smile interval radio selection falied! with value: " + smileIntervalInMinutes)
-            }
-            with (PreferenceManager.getDefaultSharedPreferences(context).edit())
-            {
-                putInt(getString(R.string.settings_key_interval_time_in_minutes),smileIntervalInMinutes)
-            }
-            (activity as ViewPagerNavigation).onProgress(2)
-        }
-*/
         return layout;
     }
 
@@ -257,7 +246,7 @@ public class EmailChooseFragment extends Fragment {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .setApplicationName(context.getString(R.string.app_name))
                     .build();
         }
 
@@ -270,7 +259,7 @@ public class EmailChooseFragment extends Fragment {
             try {
                 Date startDate = new Date();
                 EventAttendee []eventAttendeeEmail = {};
-                insertEvent("עוזר הנוכחות הדיגיטלית",  appData.makeRandId(), "","", new DateTime(startDate),new DateTime(startDate),eventAttendeeEmail );
+                insertEvent(context.getString(R.string.app_name),  appData.makeRandId(), "","", new DateTime(startDate),new DateTime(startDate),eventAttendeeEmail );
             } catch (Exception e) {
                 e.printStackTrace();
                 mLastError = e;
@@ -283,13 +272,15 @@ public class EmailChooseFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             //mOutputText.setText("");
-            //mProgress.show();
+            mProgress.show();
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
             //autoSingIn();
-            email.setText("מייל נבחר: " + mCredential.getSelectedAccountName());
+            mProgress.dismiss();
+            ((OnboardingActivity)getActivity()).onProgress(3);
+            email.setText(getString(R.string.mail_choose) + mCredential.getSelectedAccountName());
         }
 
         @Override
@@ -325,12 +316,12 @@ public class EmailChooseFragment extends Fragment {
 
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDate)
-                .setTimeZone("Asia/Jerusalem");
+                .setTimeZone(TimeZone.getDefault().getID());
         event.setStart(start);
 
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDate)
-                .setTimeZone("Asia/Jerusalem");
+                .setTimeZone(TimeZone.getDefault().getID());
         event.setEnd(end);
 
         //String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=1"};

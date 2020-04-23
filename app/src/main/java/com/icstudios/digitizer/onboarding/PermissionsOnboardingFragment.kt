@@ -40,49 +40,19 @@ class PermissionsOnboardingFragment : Fragment() {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context!!)
 
+        OnboardingActivity.next.isEnabled = hasPermissions()
+
         mButtonPermission = rootView.findViewById(R.id.button_permissions)
         mButtonPermission.setOnClickListener(View.OnClickListener { view ->
             getPermissions()
         })
 
-        mButtonFinish = rootView.findViewById(R.id.button_finish)
-        mButtonFinish.setOnClickListener(View.OnClickListener { view ->
-
-            updateAnalytics()
-            startUnlockListenerService()
-            startMainActivity()
-        })
-
         return rootView
-    }
-
-    private fun updateAnalytics()
-    {
-
     }
 
     override fun onResume() {
         super.onResume()
-        mButtonFinish.isEnabled = hasPermissions()
-    }
-
-    private fun startMainActivity() {
-        val sharedPref: SharedPreferences = context!!.getSharedPreferences("strings", Context.MODE_PRIVATE)
-
-        val editor = sharedPref.edit()
-        editor.putBoolean("firstTime", false)
-        editor.apply()
-
-        // move to next activity
-        startActivity(
-            Intent(activity, com.icstudios.digitizer.singIn::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        )
-    }
-
-    private fun startUnlockListenerService() {
-        // setting background mode to enabled
-
+        OnboardingActivity.next.isEnabled = hasPermissions()
     }
 
     /**

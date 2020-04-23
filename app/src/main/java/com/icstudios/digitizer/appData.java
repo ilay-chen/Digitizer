@@ -60,6 +60,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
@@ -547,7 +548,7 @@ public class appData extends Application {
         String eventId = getId(id);
 
         if(startDate.after(currentTime))
-        createEventAsync(opp, eventId, id, currentTopic.getTitle(), "מיקום", "תיאור",
+        createEventAsync(opp, eventId, id, currentTopic.getTitle(), "", "",
                 new DateTime(startDate), new DateTime(endDate), eventAttendeeEmail, c, activity);
     }
 
@@ -579,7 +580,7 @@ public class appData extends Application {
     public static void errorAlert(Context context, String text)
     {
         new AlertDialog.Builder(context)
-                .setTitle("שגירה בעיבוד קבצים")
+                .setTitle(R.string.error_save_files_title)
                 .setMessage(text)
 
                 // Specifying a listener allows you to take an action before dismissing the dialog.
@@ -604,11 +605,11 @@ public class appData extends Application {
             fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            errorAlert(c,"לא הצלחנו לשמור את הקבצים");
+            errorAlert(c, c.getString(R.string.error_save_files));
 
         } catch (IOException e) {
             e.printStackTrace();
-            errorAlert(c,"לא הצלחנו לשמור את הקבצים");
+            errorAlert(c, c.getString(R.string.error_save_files));
 
         }
     }
@@ -699,12 +700,12 @@ public class appData extends Application {
             // Make a change
             EventDateTime start = new EventDateTime()
                     .setDateTime(startDate)
-                    .setTimeZone("Asia/Jerusalem");
+                    .setTimeZone(TimeZone.getDefault().getID());
             event.setStart(start);
 
             EventDateTime end = new EventDateTime()
                     .setDateTime(endDate)
-                    .setTimeZone("Asia/Jerusalem");
+                    .setTimeZone(TimeZone.getDefault().getID());
             event.setEnd(end);
 
             // Update the event
@@ -727,12 +728,12 @@ public class appData extends Application {
 
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDate)
-                .setTimeZone("Asia/Jerusalem");
+                .setTimeZone(TimeZone.getDefault().getID());
         event.setStart(start);
 
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDate)
-                .setTimeZone("Asia/Jerusalem");
+                .setTimeZone(TimeZone.getDefault().getID());
         event.setEnd(end);
 
         //String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=1"};

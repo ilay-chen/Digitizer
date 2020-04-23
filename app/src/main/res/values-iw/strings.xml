@@ -997,9 +997,15 @@
 
     <string name="add_button">הוסף תיבה</string>
     <string name="remove_button">הסר תיבה</string>
-    <string name="previous_button">משימה קודמת</string>
-    <string name="next_button">משימה הבאה</string>
+    <string name="previous_button">הקודם</string>
+    <string name="next_button">הבא</string>
     <string name="time_done">סיימת</string>
     <string name="logout_text">התנתק</string>
+    <string name="error_save_files">לא הצלחנו לשמור את הקבצים</string>
+    <string name="error_save_files_title">שגירה בעיבוד קבצים</string>
+    <string name="calendar_syncing">מתחבר ללוח שנה…</string>
+    <string name="mail_choose">מייל נבחר: </string>
+    <string name="choose_mail_toast">אנא בחר מייל קודם!</string>
+    <string name="permissions_button">התר הרשאות</string>
 
 </resources>

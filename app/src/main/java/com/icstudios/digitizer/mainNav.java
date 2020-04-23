@@ -62,7 +62,6 @@ public class mainNav extends AppCompatActivity{
     private ImageButton mCallApiButton;
     private ImageButton scheduleMeeting;
     GoogleAccountCredential mCredential;
-    ProgressDialog mProgress;
     //private List<ScheduledEvents> scheduledEventsList = new ArrayList<ScheduledEvents>();
     public static final int REQUEST_ACCOUNT_PICKER = 1000;
     public static final int REQUEST_AUTHORIZATION = 1001;
@@ -131,9 +130,6 @@ public class mainNav extends AppCompatActivity{
                 //signOut();
             }
         });
-
-        mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Syncing with calendar..");
 
         final Menu menuNav=navigationView.getMenu();
 
