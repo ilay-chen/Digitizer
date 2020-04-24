@@ -133,19 +133,13 @@ public class testFragment extends Fragment {
                 }
 
                 public void onPageSelected(int position) {
-                   if(position == allLayouts.size()-1)
-                       next.setEnabled(false);
-                   else if(position==0)
-                       previous.setEnabled(false);
-                   else {
-                       next.setEnabled(true);
-                       previous.setEnabled(true);
-                   }
+                    setButton(position);
                 }
             });
 
             mViewPager.setOffscreenPageLimit(10);
             mViewPager.setCurrentItem(currentTab(currentTopic), false);
+            setButton(currentTab(currentTopic));
 
             //container.addView(vm.drawPage());
             //ImageView im = (ImageView) rootView.findViewById(R.id.mainnews);
@@ -157,6 +151,28 @@ public class testFragment extends Fragment {
 
     public static boolean isRTL() {
         return isRTL(Locale.getDefault());
+    }
+
+    public void setButton(int position)
+    {
+        int last = 0, first = allLayouts.size() - 1;
+        if (!isRTL()) {
+            last = allLayouts.size() - 1;
+            first = 0;
+        }
+
+        if (position == last) {
+            next.setEnabled(false);
+            previous.setEnabled(true);
+        }
+        else if (position == first) {
+            next.setEnabled(true);
+            previous.setEnabled(false);
+        }
+        else {
+            next.setEnabled(true);
+            previous.setEnabled(true);
+        }
     }
 
     public static boolean isRTL(Locale locale) {

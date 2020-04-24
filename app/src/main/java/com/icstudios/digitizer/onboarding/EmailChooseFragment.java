@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.ConnectionResult;
@@ -60,18 +59,19 @@ import static com.icstudios.digitizer.appData.mCredential;
 import static com.icstudios.digitizer.mainNav.REQUEST_ACCOUNT_PICKER;
 import static com.icstudios.digitizer.mainNav.REQUEST_AUTHORIZATION;
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
-import static com.icstudios.digitizer.singIn.RC_SIGN_IN;
-import static com.icstudios.digitizer.singIn.context;
+import static com.icstudios.digitizer.signIn.RC_SIGN_IN;
+import static com.icstudios.digitizer.signIn.context;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EmailChooseFragment extends Fragment {
 
-    private Button mButtonNext, mButtonPrevious, mButtonChoose;
+    private Button mButtonChoose;
     private LinearLayout layout;
     TextView email;
     ProgressDialog mProgress;
+    static Boolean accountChoose = false;
 
     public static com.google.api.services.calendar.Calendar mService = null;
     private static final String PREF_ACCOUNT_NAME = "accountName";
@@ -79,7 +79,6 @@ public class EmailChooseFragment extends Fragment {
     public EmailChooseFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -279,6 +278,8 @@ public class EmailChooseFragment extends Fragment {
         protected void onPostExecute(List<String> output) {
             //autoSingIn();
             mProgress.dismiss();
+            accountChoose = true;
+            OnboardingActivity.next.setEnabled(true);
             ((OnboardingActivity)getActivity()).onProgress(3);
             email.setText(getString(R.string.mail_choose) + mCredential.getSelectedAccountName());
         }

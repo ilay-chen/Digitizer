@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/digitizer_backround"
     android:id="@+id/layoutIn"
-    tools:context=".singIn">
+    tools:context=".signIn">
 
     <Button
         android:id="@+id/singIn"

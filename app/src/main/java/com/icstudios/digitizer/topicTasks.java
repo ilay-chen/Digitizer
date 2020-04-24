@@ -15,6 +15,7 @@ public class topicTasks implements Serializable {
     String title, subtitle;
     String id;
     Boolean toDo;
+    Boolean Done;
 
     public topicTasks(){
         tasks = new ArrayList<Task>();
@@ -34,6 +35,7 @@ public class topicTasks implements Serializable {
         this.subtitle = subtitle;
         this.id = id;
         this.toDo = toDo;
+        this.Done = false;
     }
 
     public topicTasks(String[] task, String [] text, int weeks, String title, String id){
@@ -162,5 +164,13 @@ public class topicTasks implements Serializable {
 
     public void setToDo(Boolean toDo) {
         this.toDo = toDo;
+    }
+
+    public Boolean getDone() {
+        return Done;
+    }
+
+    public void setDone(Boolean done) {
+        Done = done;
     }
 }

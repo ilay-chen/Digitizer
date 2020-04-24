@@ -9,7 +9,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,7 +64,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
 import static com.icstudios.digitizer.mainNav.data;
-import static com.icstudios.digitizer.singIn.mService;
+import static com.icstudios.digitizer.signIn.mService;
 
 public class appData extends Application {
 
@@ -135,6 +134,23 @@ public class appData extends Application {
         //sendNotification();
     }
 
+    public static int[] timeToFinish(topicTasks topic)
+    {
+        int[] values = new int[2];
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(topic.getTime());
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(System.currentTimeMillis());
+
+        long seconds = (calendar1.getTimeInMillis() - calendar2.getTimeInMillis()) / 1000;
+        int hours = (int) (seconds / 3600);
+        int days = hours/24;
+        values[0] = hours;
+        values[1] = days;
+
+        return values;
+    }
+
     public static void setRemainder(int hours, Context context)
     {
         OneTimeWorkRequest notificationWork =
@@ -145,6 +161,19 @@ public class appData extends Application {
         //PeriodicWorkRequest remainderWork = notificationWork.build();
         WorkManager.getInstance(context)
                 .enqueueUniqueWork("reminder", ExistingWorkPolicy.REPLACE, notificationWork);
+    }
+
+    public static void startNewTopic(Context context)
+    {
+        int currentId = checkTopicPos();
+        topicTasks topic = allTasks.allTopics.get(currentId);
+        int[] values = timeToFinish(topic);
+
+        int days = values[1];
+
+        weekDelay(currentId, -days + 7, topic.getScheduledDate());
+        //delayTasks(-days);
+        saveData(context);
     }
 
     public static void checkProgress(Context context, int customPos, Activity activity)
@@ -158,23 +187,20 @@ public class appData extends Application {
 
         if(topic.undoneTasks()==0) return;
 
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTimeInMillis(topic.getTime());
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTimeInMillis(System.currentTimeMillis());
+        int[] values = timeToFinish(topic);
 
-        long seconds = (calendar1.getTimeInMillis() - calendar2.getTimeInMillis()) / 1000;
-        int hours = (int) (seconds / 3600);
-        int days = hours/24;
+        int hours = values[0];
+        int days = values[1];
 
         if(hours > 24) {
             if (topic.undoneTasks() > 0) {
                 sendNotification(days, context, context.getString(R.string.days));
                 setRemainder(hours/2, context);
             } else {
-                weekDelay(currentId, -days, topic.getScheduledDate(), context, activity);
+                weekDelay(currentId, -days, topic.getScheduledDate());
                 //delayTasks(-days);
                 saveData(context);
+                updateCalendarEvent(appData.ids[currentId], context, activity);
                 //setRemainder(hours);
                 //move to next task + set time to next date
             }
@@ -194,14 +220,16 @@ public class appData extends Application {
             if (topic.undoneTasks() > 0) {
                 sendNotification(days, context,context.getString(R.string.days));
                 setRemainder(1, context);
-                weekDelay(currentId, 2, topic.getScheduledDate(), context, activity);
+                weekDelay(currentId, 2, topic.getScheduledDate());
                 //delayTasks(2);
                 saveData(context);
+                updateCalendarEvent(appData.ids[currentId], context, activity);
                 //alert task to do + delay tasks time
             } else {
-                weekDelay(currentId, (days*-1)+7, topic.getScheduledDate(), context, activity);
+                weekDelay(currentId, (days*-1)+7, topic.getScheduledDate());
                 //delayTasks((days*-1)+7);
                 saveData(context);
+                updateCalendarEvent(appData.ids[currentId], context, activity);
                 //setRemainder(0-hours);
                 //move to next task
             }
@@ -220,13 +248,11 @@ public class appData extends Application {
             topicTasks tt = allTasks.allTopics.get(currentId);
             results =  context.getString(R.string.noti_body1) + " " + tt.undoneTasks() + " " + context.getString(R.string.noti_body2) + " " + tt.tasks.size() + ". " + days + " "+ units + " " + context.getString(R.string.noti_body3);
             head = allTasks.allTopics.get(currentId).title;
-
         }
-
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, "remainder");
-        Intent ii = new Intent(context, singIn.class);
+        Intent ii = new Intent(context, signIn.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, ii, 0);
 
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
@@ -380,13 +406,11 @@ public class appData extends Application {
         }
     }
 
-    public static void weekDelay(int pos, int days, Calendar oldDate, Context context, Activity activity)
+    public static void weekDelay(int pos, int days, Calendar oldDate)
     {
         Calendar scheduledDate = oldDate;
         scheduledDate.add(Calendar.DATE, days);
         allTasks.delayDate(pos, scheduledDate);
-
-        updateCalendarEvent(appData.ids[pos], context, activity);
     }
 
     public static void delayTasks(int days)
@@ -434,7 +458,7 @@ public class appData extends Application {
         return -1;
     }
 
-    public static void checkCalendarEvent(String id, Context c, Activity activity)
+    public static void makeCalendarEvent(String id, Context c, Activity activity)
     {
         SharedPreferences sharedPref = c.getSharedPreferences("strings", MODE_PRIVATE);
         Boolean thereIsEvent = sharedPref.getBoolean(id + "Event", false);
@@ -485,8 +509,6 @@ public class appData extends Application {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
 
-        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user");
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -509,11 +531,11 @@ public class appData extends Application {
     {
         NavigationView navigationView = ((Activity)c).findViewById(R.id.nav_view);
         Menu menuNav=navigationView.getMenu();
-        int i = data.checkTopicPos();
+        int i = checkTopicPos();
         if(i == -1) i = 0;
         menuNav.performIdentifierAction(navigationView.getMenu().getItem(i).getItemId(), 0);
 
-        appData.checkCalendarEvent(appData.ids[i], c, activity);
+        appData.makeCalendarEvent(appData.ids[i], c, activity);
     }
 
     public static void makeEvent(String id, int opp, Context c, Activity activity)
@@ -521,7 +543,7 @@ public class appData extends Application {
         topicTasks currentTopic = appData.allTasks.getTopicById(id);
 
         EventAttendee []eventAttendeeEmail = new EventAttendee[3];
-        String email[] = {};
+        String[] email = {};
         int i = 0;
         for (String s : email) {
             EventAttendee eventAttendee = new EventAttendee();
@@ -652,7 +674,7 @@ public class appData extends Application {
                     if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
 
                     } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                        ((singIn)c).startActivityForResult(
+                        ((signIn)c).startActivityForResult(
                                 ((UserRecoverableAuthIOException) mLastError).getIntent(),
                                 mainNav.REQUEST_AUTHORIZATION);
                     } else {
@@ -684,7 +706,7 @@ public class appData extends Application {
                 mService.events().delete("primary", id).execute();
         } catch (IOException e) {
             e.printStackTrace();
-            if(activity!=null)
+            if(activity!=null && e.getClass().equals(((UserRecoverableAuthIOException.class))))
                 activity.startActivityForResult(
                         ((UserRecoverableAuthIOException) e).getIntent(),
                         mainNav.REQUEST_AUTHORIZATION);

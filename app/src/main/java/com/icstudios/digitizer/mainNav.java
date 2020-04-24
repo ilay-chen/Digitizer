@@ -39,6 +39,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -95,9 +96,9 @@ public class mainNav extends AppCompatActivity{
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user==null || user.getDisplayName()==null)
+        if(user==null)
         {
-            Intent a = new Intent(getApplicationContext(),singIn.class);
+            Intent a = new Intent(getApplicationContext(), signIn.class);
             a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(a);
 
@@ -213,6 +214,20 @@ public class mainNav extends AppCompatActivity{
         //getResultsFromApi();
 
         appData.setCurrentTopic(this, this);
+
+        /*
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.google_business, true)
+                .build();
+
+        Bundle b = new Bundle();
+        b.putString("data", "google_business");
+
+        navController.navigate(R.id.confirmationAction, b, navOptions);
+
+         */
+
+        //navController.navigate(R.id.confirmationAction);
         //int i = data.checkTopicPos();
         //String id = appData.ids[i];
         //createEventAsync(id , this);
@@ -249,7 +264,7 @@ public class mainNav extends AppCompatActivity{
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
                         proDialog.dismiss();
-                        Intent a = new Intent(getApplicationContext(),singIn.class);
+                        Intent a = new Intent(getApplicationContext(), signIn.class);
                         a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(a);
                     }

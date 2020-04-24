@@ -1002,5 +1002,9 @@ As you work on your business, we set tasks together. So that we can help you kee
     <string name="mail_choose">Selected Email: </string>
     <string name="choose_mail_toast">You have to choose mail first!</string>
     <string name="permissions_button">Permissions</string>
+    <string name="premmissions_title">Permissions screen</string>
+    <string name="premmissions_body">In order for us to keep your progress on the device, and record the journal reminders - we need these permissions. Thanks!</string>
+    <string name="premissions_button">permissions</string>
+    <string name="finish_button">finish</string>
 
 </resources>

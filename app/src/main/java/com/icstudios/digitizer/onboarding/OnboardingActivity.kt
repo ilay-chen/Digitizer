@@ -3,16 +3,20 @@ package com.icstudios.digitizer.onboarding;
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Switch
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.icstudios.digitizer.R
-import com.icstudios.digitizer.singIn
+import com.icstudios.digitizer.signIn
+import com.icstudios.digitizer.signIn.context
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
 
 /**
@@ -34,6 +38,7 @@ class OnboardingActivity : FragmentActivity(),ViewPagerNavigation {
         @JvmStatic lateinit var viewPager: ViewPager2
         @JvmStatic lateinit var pagerAdapter: ScreenSlidePagerAdapter
         @JvmStatic lateinit var next : Button
+        @JvmStatic lateinit var previous : Button
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +52,33 @@ class OnboardingActivity : FragmentActivity(),ViewPagerNavigation {
         pagerAdapter = ScreenSlidePagerAdapter(this)
         viewPager.adapter = pagerAdapter
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> {
+                        next.isEnabled = true
+                        next.setText(context.getString(R.string.next_button))
+                        previous.isEnabled = false
+                    }
+                    1 -> {
+                        next.isEnabled = EmailChooseFragment.accountChoose
+                        next.setText(context.getString(R.string.next_button))
+                        previous.isEnabled = true
+                    }
+                    2 -> {
+                        next.setText(getString(R.string.finish_button))
+                        next.isEnabled = hasPermissions()
+                        previous.isEnabled = true
+                    }
+                    else -> { // Note the block
+                        print("x is neither 1 nor 2")
+                    }
+                }
+
+            }
+        })
+
         val dotsIndicator = findViewById<WormDotsIndicator>(R.id.dots_indicator)
         dotsIndicator.setViewPager2(viewPager)
 
@@ -55,10 +87,14 @@ class OnboardingActivity : FragmentActivity(),ViewPagerNavigation {
             nextPage()
         })
 
-        var previous = findViewById<Button>(R.id.previous)
+        previous = findViewById<Button>(R.id.previous)
         previous.setOnClickListener(View.OnClickListener {
             previousPage()
         })
+    }
+
+    fun hasPermissions() = PERMISSIONS_REQUIRED.all {
+        ContextCompat.checkSelfPermission(context!!, it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onBackPressed() {
@@ -100,7 +136,7 @@ class OnboardingActivity : FragmentActivity(),ViewPagerNavigation {
 
         // move to next activity
         startActivity(
-                Intent(applicationContext, singIn::class.java)
+                Intent(applicationContext, signIn::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )
     }

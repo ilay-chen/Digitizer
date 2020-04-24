@@ -12,13 +12,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,7 +58,7 @@ import static com.icstudios.digitizer.mainNav.REQUEST_ACCOUNT_PICKER;
 import static com.icstudios.digitizer.mainNav.REQUEST_AUTHORIZATION;
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
 
-public class singIn extends AppCompatActivity {
+public class signIn extends AppCompatActivity {
 
     public static final int RC_SIGN_IN = 123;
     Button next, login;
@@ -161,6 +158,7 @@ public class singIn extends AppCompatActivity {
         }
     }
 
+
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
@@ -183,6 +181,7 @@ public class singIn extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /*
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
@@ -198,15 +197,21 @@ public class singIn extends AppCompatActivity {
                 // ...
             }
         }
+         */
+
         switch(requestCode) {
             case RC_SIGN_IN:
                 IdpResponse response = IdpResponse.fromResultIntent(data);
+                if(resultCode == RESULT_OK) {
+                    Intent a = new Intent(getApplicationContext(),mainNav.class);
+                    a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(a);
+                }
                 break;
             case RESULT_OK:
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Intent a = new Intent(getApplicationContext(),mainNav.class);
                 a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //startActivity(a);
+                startActivity(a);
                 break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -241,7 +246,7 @@ public class singIn extends AppCompatActivity {
 
     public void askPremission()
     {
-        ActivityCompat.requestPermissions(singIn.this,
+        ActivityCompat.requestPermissions(signIn.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.GET_ACCOUNTS},
                 1);
     }
@@ -261,7 +266,7 @@ public class singIn extends AppCompatActivity {
                     getResultsFromApi();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(singIn.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(signIn.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -405,7 +410,7 @@ public class singIn extends AppCompatActivity {
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-                singIn.this,
+                signIn.this,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -442,7 +447,7 @@ public class singIn extends AppCompatActivity {
         } else if (! isDeviceOnline()) {
             //mOutputText.setText("No network connection available.");
         } else {
-            new singIn.MakeRequestTask(mCredential, this).execute();
+            new signIn.MakeRequestTask(mCredential, this).execute();
         }
     }
 

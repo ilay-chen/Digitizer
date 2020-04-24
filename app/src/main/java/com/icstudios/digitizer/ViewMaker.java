@@ -584,18 +584,23 @@ public class ViewMaker {
                 //TODO finish all!!
             }
             appData.deleteCalendarEvent(appData.ids[currentPos], context, (Activity)context);
-            appData.updateCalendarEvent(appData.ids[currentPos+1], context, (Activity)context);
+            //appData.checkCalendarEvent(appData.ids[currentPos+1], context, (Activity)context);
+            if(!currentTopic.getDone()) {
+                appData.startNewTopic(context);
+                currentTopic.setDone(true);
+            }
 
             NavigationView navigationView = ((Activity)context).findViewById(R.id.nav_view);
-            Menu menuNav=navigationView.getMenu();
+            navigationView.getMenu().getItem(appData.checkTopicPos()).setEnabled(true);
 
+/*
             int i = currentPos+1;
             while (!appData.allTasks.getAllTopics().get(i).getToDo())
             {
                 i++;
             }
-            navigationView.getMenu().getItem(appData.checkTopicPos()).setEnabled(true);
 
+ */
             //appData.checkProgress(context, currentPos, (Activity)context);
 
             fab.setVisibility(View.VISIBLE);

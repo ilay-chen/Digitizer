@@ -95,8 +95,10 @@ public class serverWorker extends Worker {
             @Override
             protected void onPostExecute (Result s){
                 super.onPostExecute(s);
-                result = s;
-                sendNotification(s.toString());
+                if (s.equals(Result.success())) {
+                    //result = s;
+                    //sendNotification(s.toString());
+                }
                 //getResultsFromApi();
             }
         }.execute();
@@ -111,7 +113,7 @@ public class serverWorker extends Worker {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), "server");
-        Intent ii = new Intent(getApplicationContext(), singIn.class);
+        Intent ii = new Intent(getApplicationContext(), signIn.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, ii, 0);
 
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
