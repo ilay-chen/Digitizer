@@ -208,11 +208,6 @@ public class signIn extends AppCompatActivity {
                     startActivity(a);
                 }
                 break;
-            case RESULT_OK:
-                Intent a = new Intent(getApplicationContext(),mainNav.class);
-                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(a);
-                break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
 

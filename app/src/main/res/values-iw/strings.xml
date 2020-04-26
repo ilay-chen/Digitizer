@@ -1007,9 +1007,11 @@
     <string name="mail_choose">מייל נבחר: </string>
     <string name="choose_mail_toast">אנא בחר מייל קודם!</string>
     <string name="permissions_button">התר הרשאות</string>
-    <string name="premmissions_title">Permissions screen</string>
+    <string name="premmissions_title">דף אישור הרשאות</string>
     <string name="premmissions_body">על מנת שנוכל לשמור את ההתקדמות שלכם במכשיר, ולרשום את התזכורות ביומן - אנו זקוקים להרשאות אלה. תודה!</string>
     <string name="premissions_button">אשר הרשאות</string>
     <string name="finish_button">סיים</string>
+    <string name="fill_here">מלא כאן</string>
+    <string name="updating_progress">מעדכן התקדמות</string>
 
 </resources>

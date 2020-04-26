@@ -375,10 +375,10 @@ The sales team should:
 <![CDATA[<br>]]>
 By analyzing the results against the CPI metrics, Ryan will be able to know exactly which employees meet expectations and who needs additional sales guidance.
        </item>
-        <item>ה</item>
-        <item>empty</item>
-        <item>empty</item>
-        <item>empty</item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
     </string-array>
     <string-array name = "topic_kpi_extra">
         <item>Enter here</item>
@@ -795,7 +795,7 @@ The message subject line can build or destroy the campaign:
             <![CDATA[<br>]]>
 - Whenever possible, you may want to customize the subject line to the recipient personally or to their geographical area. For example: "Puppy, is your puppy the healthiest in London?"
             <![CDATA[<br>]]>
-Avoid words such as "free", "discount percentages", "reminder" and "promotions" as well as currency symbols (₪) and exclamation points. כל אלה ידועים כגורמים להפעלת מסנני דואר זבל.
+Avoid words such as "free", "discount percentages", "reminder" and "promotions" as well as currency symbols (₪) and exclamation points.These are all known to trigger spam filters.
             <![CDATA[<br>]]>
        </item>
         <item>
@@ -1004,7 +1004,9 @@ As you work on your business, we set tasks together. So that we can help you kee
     <string name="permissions_button">Permissions</string>
     <string name="premmissions_title">Permissions screen</string>
     <string name="premmissions_body">In order for us to keep your progress on the device, and record the journal reminders - we need these permissions. Thanks!</string>
-    <string name="premissions_button">permissions</string>
-    <string name="finish_button">finish</string>
+    <string name="premissions_button">Permissions</string>
+    <string name="finish_button">Finish</string>
+    <string name="fill_here">Your answer here</string>
+    <string name="updating_progress">Updating progress</string>
 
 </resources>

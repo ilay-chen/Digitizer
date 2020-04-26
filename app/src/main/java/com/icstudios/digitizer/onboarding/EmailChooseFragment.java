@@ -2,6 +2,7 @@ package com.icstudios.digitizer.onboarding;
 
 
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -50,7 +51,6 @@ import com.icstudios.digitizer.topicTasks;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import static android.app.Activity.RESULT_OK;
@@ -61,6 +61,7 @@ import static com.icstudios.digitizer.mainNav.REQUEST_AUTHORIZATION;
 import static com.icstudios.digitizer.mainNav.REQUEST_GOOGLE_PLAY_SERVICES;
 import static com.icstudios.digitizer.signIn.RC_SIGN_IN;
 import static com.icstudios.digitizer.signIn.context;
+import static com.icstudios.digitizer.signIn.mService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -235,7 +236,31 @@ public class EmailChooseFragment extends Fragment {
         }
     }
 
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    private class deleteEvent extends AsyncTask<Void, Void, Void> {
+
+        String eventId;
+        public deleteEvent(String eventId) {
+            this.eventId = eventId;
+        }
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+
+                deleteCalendarEvent(eventId, (Activity)context);
+            } catch (Exception e) {
+                e.printStackTrace();
+                cancel(true);
+            }
+            return null;
+        }
+    }
+
+    private class MakeRequestTask extends AsyncTask<Void, Void, String> {
 
         private Exception mLastError = null;
         private boolean FLAG = false;
@@ -254,18 +279,17 @@ public class EmailChooseFragment extends Fragment {
          * @param params no parameters needed for this task.
          */
         @Override
-        protected List<String> doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             try {
                 Date startDate = new Date();
                 EventAttendee []eventAttendeeEmail = {};
-                insertEvent(context.getString(R.string.app_name),  appData.makeRandId(), "","", new DateTime(startDate),new DateTime(startDate),eventAttendeeEmail );
+                return insertEvent(context.getString(R.string.app_name),  appData.makeRandId(), "","", new DateTime(startDate),new DateTime(startDate),eventAttendeeEmail );
             } catch (Exception e) {
                 e.printStackTrace();
                 mLastError = e;
                 cancel(true);
                 return null;
             }
-            return null;
         }
 
         @Override
@@ -275,8 +299,9 @@ public class EmailChooseFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<String> output) {
+        protected void onPostExecute(String output) {
             //autoSingIn();
+            new deleteEvent(output).execute();
             mProgress.dismiss();
             accountChoose = true;
             OnboardingActivity.next.setEnabled(true);
@@ -308,7 +333,21 @@ public class EmailChooseFragment extends Fragment {
         }
     }
 
-    void insertEvent(String summary, String EventId, String location, String des, DateTime startDate, DateTime endDate, EventAttendee[] eventAttendees) throws IOException {
+    private static void deleteCalendarEvent(String id, Activity activity)
+    {
+        try {
+            if(mService!=null)
+                mService.events().delete("primary", id).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            if(activity!=null && e.getClass().equals(((UserRecoverableAuthIOException.class))))
+                activity.startActivityForResult(
+                        ((UserRecoverableAuthIOException) e).getIntent(),
+                        mainNav.REQUEST_AUTHORIZATION);
+        }
+    }
+
+    String insertEvent(String summary, String EventId, String location, String des, DateTime startDate, DateTime endDate, EventAttendee[] eventAttendees) throws IOException {
         Event event = new Event()
                 .setSummary(summary)
                 .setLocation(location)
@@ -336,22 +375,14 @@ public class EmailChooseFragment extends Fragment {
             //event.send
             if(mService!=null)
                 mService.events().insert(calendarId, event).setSendNotifications(true).execute();
+            return EventId;
         } catch (IOException e) {
             e.printStackTrace();
             startActivityForResult(
                     ((UserRecoverableAuthIOException) e).getIntent(),
                     mainNav.REQUEST_AUTHORIZATION);
         }
-    }
-
-    public void autoSingIn(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null && user.getDisplayName()!=null)
-        {
-            Intent a = new Intent(getContext(), mainNav.class);
-            a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(a);
-        }
+        return EventId;
     }
 
     // [START auth_fui_result]
@@ -359,30 +390,13 @@ public class EmailChooseFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                readDataFromUser(getContext());
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-            }
-        }
         switch(requestCode) {
             case RC_SIGN_IN:
                 IdpResponse response = IdpResponse.fromResultIntent(data);
-                break;
-            case RESULT_OK:
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Intent a = new Intent(getContext(),mainNav.class);
-                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //startActivity(a);
+                if (resultCode == RESULT_OK) {
+                    // Successfully signed in
+                    readDataFromUser(getContext());
+                }
                 break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -419,7 +433,7 @@ public class EmailChooseFragment extends Fragment {
     public void readDataFromUser(final Context c)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users/progress").child(user.getUid());
 
         //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user");
 

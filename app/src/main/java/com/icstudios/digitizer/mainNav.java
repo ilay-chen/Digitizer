@@ -39,7 +39,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -235,7 +234,7 @@ public class mainNav extends AppCompatActivity{
 
     public void update()
     {
-        proDialog = ProgressDialog.show(this, "יוצא", "מעדכן התקדמות");
+        proDialog = ProgressDialog.show(this, getString(R.string.logout_text), getString(R.string.updating_progress));
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
@@ -340,295 +339,17 @@ public class mainNav extends AppCompatActivity{
         mi.setTitle(mNewTitle);
     }
 
-    public testFragment getVisibleFragment(){
+    public taskFragment getVisibleFragment(){
         FragmentManager fragmentManager = mainNav.this.getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
         if(fragments != null){
             for(Fragment fragment : fragments){
                 if(fragment != null && fragment.isVisible())
-                    return (testFragment)fragment;
+                    return (taskFragment)fragment;
             }
         }
         return null;
     }
-/*
-    private com.google.api.services.calendar.Calendar mService = null;
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-
-        private Exception mLastError = null;
-        private boolean FLAG = false;
-
-        public MakeRequestTask(GoogleAccountCredential credential) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.calendar.Calendar.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
-                    .build();
-        }
-
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                getDataFromApi();
-            } catch (Exception e) {
-                e.printStackTrace();
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-            return null;
-        }
-
-
-        private void getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
-            Events events = mService.events().list("primary")
-                    .setMaxResults(10)
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
-            List<Event> items = events.getItems();
-            ScheduledEvents scheduledEvents;
-            scheduledEventsList.clear();
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-                scheduledEvents = new ScheduledEvents();
-                scheduledEvents.setEventId(event.getId());
-                scheduledEvents.setDescription(event.getDescription());
-                scheduledEvents.setEventSummery(event.getSummary());
-                scheduledEvents.setLocation(event.getLocation());
-                scheduledEvents.setStartDate(start.toString());
-                scheduledEvents.setEndDate("");
-                StringBuffer stringBuffer = new StringBuffer();
-                if(event.getAttendees()!=null) {
-                    for (EventAttendee eventAttendee : event.getAttendees()) {
-                        if(eventAttendee.getEmail()!=null)
-                            stringBuffer.append(eventAttendee.getEmail() + "       ");
-                    }
-                    scheduledEvents.setAttendees(stringBuffer.toString());
-                }
-                else{
-                    scheduledEvents.setAttendees("");
-                }
-                scheduledEventsList.add(scheduledEvents);
-                System.out.println("-----"+event.getDescription()+", "+event.getId()+", "+event.getLocation());
-                System.out.println(event.getAttendees());
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //mOutputText.setText("");
-            mProgress.show();
-        }
-
-        @Override
-        protected void onPostExecute(List<String> output) {
-            mProgress.hide();
-            //System.out.println("--------------------"+scheduledEventsList.size());
-            if (scheduledEventsList.size()<=0) {
-                mOutputText.setText("No results returned.");
-            } else {
-                //eventListAdapter = new EventListAdapter(mainNav.this, scheduledEventsList);
-                //eventListView.setAdapter(eventListAdapter);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mProgress.hide();
-            if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            mainNav.REQUEST_AUTHORIZATION);
-                } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
-                }
-            } else {
-                mOutputText.setText("Request cancelled.");
-            }
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    public void createEventAsync(final String summary, final String location, final String des, final DateTime startDate, final DateTime endDate, final EventAttendee[]
-            eventAttendees) {
-
-        new AsyncTask<Void, Void, String>() {
-            private com.google.api.services.calendar.Calendar mService = null;
-            private Exception mLastError = null;
-            private boolean FLAG = false;
-
-
-            @Override
-            protected String doInBackground (Void...voids){
-                try {
-                    insertEvent(summary, location, des, startDate, endDate, eventAttendees);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute (String s){
-                super.onPostExecute(s);
-                //getResultsFromApi();
-            }
-        }.execute();
-    }
-    void insertEvent(String summary, String location, String des, DateTime startDate, DateTime endDate, EventAttendee[] eventAttendees) throws IOException {
-        Event event = new Event()
-                .setSummary(summary)
-                .setLocation(location)
-                .setDescription(des);
-
-        EventDateTime start = new EventDateTime()
-                .setDateTime(startDate)
-                .setTimeZone("Asia/Jerusalem");
-        event.setStart(start);
-
-        EventDateTime end = new EventDateTime()
-                .setDateTime(endDate)
-                .setTimeZone("Asia/Jerusalem");
-        event.setEnd(end);
-
-        String[] recurrence = new String[] {"RRULE:FREQ=DAILY;COUNT=1"};
-        event.setRecurrence(Arrays.asList(recurrence));
-
-
-        event.setAttendees(Arrays.asList(eventAttendees));
-
-        EventReminder[] reminderOverrides = new EventReminder[] {
-                new EventReminder().setMethod("email").setMinutes(24 * 60),
-                new EventReminder().setMethod("popup").setMinutes(10),
-        };
-        Event.Reminders reminders = new Event.Reminders()
-                .setUseDefault(false)
-                .setOverrides(Arrays.asList(reminderOverrides));
-        event.setReminders(reminders);
-
-        String calendarId = "primary";
-        //event.send
-        if(mService!=null)
-            mService.events().insert(calendarId, event).setSendNotifications(true).execute();
-    }
-
-    private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
-        } else {
-            new MakeRequestTask(mCredential).execute();
-        }
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
-    }
-
-    void showGooglePlayServicesAvailabilityErrorDialog(
-            final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                mainNav.this,
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
-    }
-
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
-
-    private void chooseAccount() {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
-            if (accountName != null) {
-                mCredential.setSelectedAccountName(accountName);
-                //getResultsFromApi();
-            } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(
-                        mCredential.newChooseAccountIntent(),
-                        REQUEST_ACCOUNT_PICKER);
-            }
-    }
-
-
-    @Override
-    protected void onActivityResult(
-            int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case REQUEST_GOOGLE_PLAY_SERVICES:
-                if (resultCode != RESULT_OK) {
-                    mOutputText.setText(
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
-                } else {
-                    //getResultsFromApi();
-                }
-                break;
-            case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        //getResultsFromApi();
-                    }
-                }
-                break;
-            case REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    //getResultsFromApi();
-                }
-                break;
-        }
-    }
-    */
 
 @Override
 public void onBackPressed() {

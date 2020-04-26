@@ -93,11 +93,11 @@ public class ViewMaker {
         for(int i = 0; i < currentTopic.tasks.size(); i++) {
             final String extra = currentTopic.tasks.get(i).extraDetail;
             if (extra.contains("pages")) {
-                allTv[i] = new taskView(new TextView(context), new CheckBox(context), 3, context, "מלא כאן");
+                allTv[i] = new taskView(new TextView(context), new CheckBox(context), 3, context, context.getString(R.string.fill_here));
                 pageIndex = i;
             }
             else if (extra.contains("population"))
-                allTv[i] = new taskView(new TextView(context), new CheckBox(context), 0, context, "מלא כאן");
+                allTv[i] = new taskView(new TextView(context), new CheckBox(context), 0, context, context.getString(R.string.fill_here));
             else if (extra.contains("aim")) {
                 String[] market = context.getResources().getStringArray(R.array.market_palaces);
                 allTv[i] = new taskView(new TextView(context), new CheckBox(context), market, context);

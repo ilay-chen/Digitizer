@@ -97,7 +97,7 @@ public class serverWorker extends Worker {
                 super.onPostExecute(s);
                 if (s.equals(Result.success())) {
                     //result = s;
-                    //sendNotification(s.toString());
+                    sendNotification(s.toString());
                 }
                 //getResultsFromApi();
             }
