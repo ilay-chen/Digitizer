@@ -3,6 +3,7 @@ package com.icstudios.digitizer;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -71,7 +73,7 @@ public class mainNav extends AppCompatActivity{
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
     DrawerLayout drawer;
-    ProgressDialog proDialog;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +83,17 @@ public class mainNav extends AppCompatActivity{
 
         setContentView(R.layout.activity_main_nav);
 
+        context = this;
+
         data = (appData) getApplication();
 
         //startMarketing();
 
         askPremission();
+
+        //ProcessLifecycleOwner.get().getLifecycle().addObserver(new UserManager(this));
+
+        //appData.setRemainder(1, this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Digitizer");
@@ -126,7 +134,7 @@ public class mainNav extends AppCompatActivity{
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                update();
+                UserManager.Companion.update(context);
                 //signOut();
             }
         });
@@ -230,45 +238,6 @@ public class mainNav extends AppCompatActivity{
         //int i = data.checkTopicPos();
         //String id = appData.ids[i];
         //createEventAsync(id , this);
-    }
-
-    public void update()
-    {
-        proDialog = ProgressDialog.show(this, getString(R.string.logout_text), getString(R.string.updating_progress));
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null) {
-            appData.readData(this);
-            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
-            mDatabase.setValue(data.allTasks);
-
-            mDatabase.setValue(data.allTasks, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                    if (databaseError != null) {
-                        System.out.println("Data could not be saved. " + databaseError.getMessage());
-                    } else {
-                        signOut();
-                        System.out.println("Data saved successfully.");
-                    }
-                }
-            });
-        }
-    }
-
-    public void signOut() {
-        // [START auth_fui_signout]
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        proDialog.dismiss();
-                        Intent a = new Intent(getApplicationContext(), signIn.class);
-                        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(a);
-                    }
-                });
-        // [END auth_fui_signout]
     }
 /*
     public void refreshMenu()

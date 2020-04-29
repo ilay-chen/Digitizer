@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -63,7 +64,7 @@ public class signIn extends AppCompatActivity {
     public static final int RC_SIGN_IN = 123;
     Button next, login;
     public static com.google.api.services.calendar.Calendar mService = null;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
+    public static final String PREF_ACCOUNT_NAME = "accountName";
     public static Context context;
 
     @Override
@@ -106,13 +107,13 @@ public class signIn extends AppCompatActivity {
              */
         }
         else {
-
+            ProcessLifecycleOwner.get().getLifecycle().addObserver(new UserManager(this));
 
             askPremission();
 
             getResultsFromApi();
 
-            startMarketing();
+            //startMarketing();
 
             next = (Button) findViewById(R.id.singIn);
 
@@ -154,7 +155,7 @@ public class signIn extends AppCompatActivity {
             a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(a);
 
-            finish();
+            finishAffinity();
         }
     }
 
@@ -203,9 +204,14 @@ public class signIn extends AppCompatActivity {
             case RC_SIGN_IN:
                 IdpResponse response = IdpResponse.fromResultIntent(data);
                 if(resultCode == RESULT_OK) {
-                    Intent a = new Intent(getApplicationContext(),mainNav.class);
-                    a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(a);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if(user!=null) {
+                        appData.userRootPath = "users/" + user.getUid();
+                    }
+
+//                    Intent a = new Intent(getApplicationContext(),mainNav.class);
+//                    a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(a);
                 }
                 break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
@@ -457,7 +463,7 @@ public class signIn extends AppCompatActivity {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Digitizer")
+                    .setApplicationName(context.getString(R.string.app_name))
                     .build();
             this.activity = activity;
         }
@@ -486,7 +492,7 @@ public class signIn extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-            autoSingIn();
+            //autoSingIn();
             //appData.checkProgress(context, -1, activity);
         }
 
@@ -512,5 +518,9 @@ public class signIn extends AppCompatActivity {
             }
 
         }
+    }
+    static public Context getContext()
+    {
+        return context;
     }
 }

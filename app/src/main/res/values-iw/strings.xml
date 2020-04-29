@@ -1014,4 +1014,11 @@
     <string name="fill_here">מלא כאן</string>
     <string name="updating_progress">מעדכן התקדמות</string>
 
+    <string name="login_message">You have to logIn if you want keep using the application!</string>
+    <string name="login_no">I dont want, enough</string>
+    <string name="login_ok">OK, lets sign in</string>
+
+    <string name="login_title">מתחבר</string>
+    <string name="login_body">בודקים אם יש עדכונים.. כמה שניות</string>
+
 </resources>

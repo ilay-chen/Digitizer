@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
-// Apply the Crashlytics Gradle plugin
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
@@ -20,8 +19,8 @@ android {
         applicationId "com.icstudios.digitizer"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 19
-        versionName "0.0.19"
+        versionCode 21
+        versionName "0.0.21"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +28,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable = true
+            debuggable = false
             signingConfig signingConfigs.config
         }
     }
@@ -81,7 +80,17 @@ dependencies {
 
     // Add the Firebase SDK for Crashlytics.
     implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
+
+    // AndroidX
+    def lifecycle_version = "2.2.0"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
 }
+
 repositories {
     mavenCentral()
 }

@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.icstudios.digitizer.R;
+import com.icstudios.digitizer.UserManager;
 import com.icstudios.digitizer.appData;
 import com.icstudios.digitizer.mainNav;
 import com.icstudios.digitizer.marketingTasks;
@@ -395,7 +396,7 @@ public class EmailChooseFragment extends Fragment {
                 IdpResponse response = IdpResponse.fromResultIntent(data);
                 if (resultCode == RESULT_OK) {
                     // Successfully signed in
-                    readDataFromUser(getContext());
+                    //readDataFromUser(getContext());
                 }
                 break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
@@ -433,7 +434,7 @@ public class EmailChooseFragment extends Fragment {
     public void readDataFromUser(final Context c)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users/progress").child(user.getUid());
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(appData.userTaskPath);
 
         //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user");
 

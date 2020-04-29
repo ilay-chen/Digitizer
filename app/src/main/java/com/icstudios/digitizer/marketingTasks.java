@@ -6,9 +6,12 @@ import java.io.Serializable;
 
 public class marketingTasks implements Serializable{
     ArrayList<topicTasks> allTopics;
+    long lastUpdate;
 
     public marketingTasks(){
         allTopics = new ArrayList<topicTasks>();
+        Calendar scheduledDate = Calendar.getInstance();
+        this.lastUpdate = scheduledDate.getTime().getTime();
     }
 
     public ArrayList<topicTasks> getAllTopics() {
@@ -83,5 +86,20 @@ public class marketingTasks implements Serializable{
             allTopics.get(topicId).setTitle(title);
             allTopics.get(topicId).setSubtitle(subtitle);
             allTopics.get(topicId).updateTask(Task, taskName, extraDetail);
+    }
+
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Boolean isUpToDate(long lastUpdate)
+    {
+        if(this.lastUpdate > lastUpdate)
+            return true;
+        return false;
     }
 }

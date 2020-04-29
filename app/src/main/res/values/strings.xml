@@ -3,17 +3,17 @@
     <string name = "subtitle_prefix">em; lc:</string>
 
     <string name = "strategy">Building a strategy</string>
-    <string name = "usp">Unique Benefits (USP)</string>
-    <string name = "my_believe">The \ "I believe \" of my business</string>
+    <string name = "usp">Unique Benefits(USP)</string>
+    <string name = "my_believe">The \"I believe\"</string>
     <string name = "kpi">Improvement with Goals</string>
     <string name = "google_business">Google Business Page</string>
-    <string name = "posts">Posts (on social media and blog)</string>
+    <string name = "posts">Posts</string>
     <string name = "content_marketing">content marketing</string>
     <string name = "website">Build a site</string>
-    <string name = "sem">Post SEM</string>
-    <string name = "ads">Posting in Media (Advertisements)</string>
+    <string name = "sem">SEM</string>
+    <string name = "ads">Advertisements</string>
     <string name = "mail">Email Marketing</string>
-    <string name = "app">Using a smartphone</string>
+    <string name = "app">Smartphone</string>
 
     <string-array name="topics_id">
         <item>strategy</item>
@@ -32,40 +32,40 @@
 
     <string name = "strategy_subtitle">
                     In this unit we will build the strategy for promoting the business, by three main steps:
-
+\n
 1. Goals - What do you want to achieve through your digital presence? (E.g., increase sales or brand recognition)
-
+\n\n
 2. Mission Statement - What values ​​are important to the business? (E.g. Fair Trade or Environmental Protection)
-
+\n\n
 3. Unique Business Advantages (USP - Unique selling proposition) - What makes the business unique compared to its competitors? (E.g. customer service, fixed price, or quality).
-\ n
+\n
    </string>
     <string name = "usp_subtitle">
-                    To help my clients understand why they should reach me, I need to understand the exact service I offer. When the customer buys, he goes through a process: "Seeing, thinking, doing, feeling" (See, Think, Do, Care). We must understand this process in order to connect with the customer.
-\ n
-     Think about the last product you bought online, then go back to the "see, think, do, feel" frame. Consider the following:
-\ n
+   To help my clients understand why they should reach me, I need to understand the exact service I offer. When the customer buys, he goes through a process: "Seeing, thinking, doing, feeling" (See, Think, Do, Care). We must understand this process in order to connect with the customer.
+\n
+   Think about the last product you bought online, then go back to the "see, think, do, feel" frame. Consider the following:
+\n
 1. What prompted you to get interested in the product? (See)
-\ n
+\n
 2. How did you do your research? (Think)
-\ n
+\n
 3. What eventually made you press the buy button? (Do)
-\ n
+\n
 4. Have you left a review or posted a picture of the product online? (Feel).
 
    </string>
     <string name = "my_believe_subtitle">
            Creating a believing self of the business is an important step before jumping into the water and starting advertising. When a customer searches for a product, it checks to see if the product meets its need, in the best way, and connects to it.
-\ n
+\n
             When we want to create a digital presence for the business, we must first of all explain in a sentence - who we are and why we bring the product that is right for the customer. Once we know how to set this up for ourselves, we can use it in our advertising and representation on the network, enabling the customer to connect with the business.
    </string>
     <string name = "kpi_subtitle">
                     Developing key performance indicators (or KPIs) is a necessary tool for understanding whether my business is progressing and meeting my goals.
-\ n
+\n
 This is a quantitative metric that allows me to focus on the most important criteria for achieving business goals.
-\ n
+\n
 How do you do that?
-            \ n
+            \n
             KPIs should be specific, measurable, achievable, relevant and limited in time. This is called the SMART framework.
    </string>
     <string name = "website_subtitle">
@@ -94,15 +94,15 @@ what is the meaning?
 Marketers need to get to where customers are, and currently customers are on mobile phones.
 
 How do you do that?
-            \ n
+            \n
 Responsive site - optimized.
-            \ n
+            \n
 - Operation link
-            \ n
+            \n
 - Direct phone call
-            \ n
+            \n
 - Apps
-\ n
+\n
    </string>
     <string name = "sem_subtitle">
                     These are messages that appear at the top of the page and are displayed by using certain keywords.
@@ -117,104 +117,104 @@ How do the search engines decide who will win? The main factors are:
 2. The quality.
 
 The bid is the maximum amount that an advertiser is willing to pay for a click on their ad. If someone clicks on the ad, the advertiser is charged or sometimes less than the bid amount. So if an advertiser bids for $ 2 per keyword, that\'s the maximum they\'ll pay for a single click.
-\ n
+\n
 Bids are important, but quality is just as important. Not always the highest bidder will win the auction. The search engines reward ads and keywords that are very relevant to the search term. In fact, relevant ads may "win" higher positions on the search results page, even with lower bids. In some cases, even if the bid is very high, the search engine will not show the ad if it is irrelevant.
-        \ n
+        \n
    </string>
     <string name = "ads_subtitle">
                     Display advertising can be likened to a digital version of a billboard, print ad, or TV commercial. Businesses pay the owners of "space" for ad serving in the hope that their ads will show to the right people, and those people will become customers.
-\ n
+\n
 There are many methods to execute these transactions. You can make a deal directly with a site owner, or use networks that "link" between businesses and different sites that have space to display ads for sale. You can decide to show ads on specific web pages or to specific people, or even both.
-\ n
+\n
    </string>
     <string name = "google_business_subtitle">
                     Google Business, is a fundamental and significant milestone in creating digital presence. When you search for your business name on Google, the business page will appear immediately and provide important details - such as location, opening hours, products and even prices. It is an initial and meaningful way of advertising - simple and free.
    </string>
     <string name = "content_marketing_subtitle">
                     There are loads of businesses on the internet, so it is very important to stand out. Content-based marketing is a great way to attract the attention of the audience. In this lesson, we will see why content-based marketing is important and how it can be used to engage with the audience. In addition, we’ll show you best practices to help you create content-based marketing campaigns.
-\ n
+\n
 Content-based marketing creates and shares online content, such as videos, blogs, and social networking posts. Its goal is to generate interest in the company\'s products or services by attracting the audience\'s attention.
-\ n
+\n
 Today people can choose when to interact with the brand (engagement), and content-based marketing allows businesses to connect with audiences in a way that has never been possible before.
-\ n
+\n
 You can post interesting content about dogs on your blog site, and promote it on the company\'s social media platforms so that more people read the content.
 The more you know about the audience and understand their interests and needs, the easier it will be to arouse interest on a personal level.
-\ n
+\n
 How to do it?
-            \ n
+            \n
 1. Answer the questions of the audience
-            \ n
+            \n
 2. Provide something valuable
-            \ n
+            \n
 3. Engage the audience for more content
-\ n
+\n
 Avoid business language and stencil responses, preferring natural formulations to stimulate audience interest. Create unique, interesting and exciting content. Use interesting headlines, attractive pictures and informative content to get the audience\'s attention.
-\ n
+\n
    </string>
     <string name = "posts_subtitle">
         You can publish all kinds of content online:
-            \ n
+            \n
 - success stories
-\ n
+\n
             - eBooks
-\ n
+\n
             - infographic
-\ n
+\n
             - Pictures and clips
-\ n
+\n
             - more and more
-\ n
-\ n
+\n
+\n
             No matter what content format you choose, the goal is always the same: to communicate with an audience. The audience in turn will engage, share, learn, and some users may even convert.
-\ n
+\n
             - In many cases, blogging is started as a separate section of an existing site. Blogs may include original content or guest author content.
-\ n
+\n
             - Infographic is a great and informative method for visually displaying information. Infographic is very suitable for the Internet because it is a format that attracts attention and can be used to present complex or specialized content creatively.
-\ n
+\n
             - eBooks can serve as informational guides that are easy to read and focus on a specific topic. This format provides readers with useful content and can help you stand out as an expert in your field.
-\ n
+\n
             - Videos can include any type of content, from product demos to tutorials and customer stories. They allow brand advertisers to create interesting, entertaining and useful content that can be viewed anywhere.
-\ n
+\n
             The next step is to think about what the main goal you want to achieve with the content. Generally, when engaging in content-based marketing, content creates four main goals that are:
-\ n
+\n
             - to entertain
-\ n
+\n
             - To inspire
-\ n
+\n
             - Teach
-\ n
+\n
             - Convince
 \n\n
 
 Let\'s use the example to explain how different content formats fit the goals you want to achieve with them:
-            \ n
+            \n
             Amber runs a hairdresser for dogs and wants to develop a content strategy that will help her highlight the presence of business on the Internet. To entertain the audience, she decides to post on social media funny clips of dogs doing stunts. To inspire, she plans to open a forum on the site, where people can post questions and get insights from her and other pet-raising people. To teach the audience, she shares blog posts. The posts include important dog care tips and dog nutrition tips. To convince people to use her services, she will share satisfied customer stories and ebooks that will showcase her knowledge and expertise in grooming. In a scenario that is relevant to your business, try to think which formats are best for achieving the specific goals you set for publishing content.
 
-        \ n
+        \n
    </string>
     <string name = "mail_subtitle">
                     We are all flooded with a wide variety of products today. If you want your product to occupy an important place in customer awareness, you should use email marketing. Email marketing is a great addition to the other digital marketing activities. Why? Because it fosters customer loyalty and engagement without the need for high financial investment and works well on mobile.
-\ n
+\n
             The best way to start is to make a list of people who have expressed an interest in your business.
-            \ n
+            \n
 How to do it?
-            \ n
+            \n
 - Offer them information on discounts and promotions if they provide an email address.
-            \ n
+            \n
 - If you have a website, you can include a form and encourage visitors to subscribe to the site. (It\'s important to remember that users should give you permission to send them commercial emails, and in many countries there are laws that require this consent.)
 \n\n
 More tips:
-            \ n
+            \n
 - It shouldn\'t overwhelm users - otherwise they treat it as spam. You should start with a friendly "Hello" message in which you introduce yourself. Then, you can submit information about the store and the products you sell.
-\ n
+\n
 - When you have information about your customers, you can send them specific offers or content that may interest them.
-\ n
+\n
 - As you tell customers about your business, you can use marketing emails to get to know them better, too. You can ask your subscribers if they would like updates on other products or services. Then you can find out how they prefer to hear from you. For example, do they prefer to receive emails once a week or once a month? You can save this information in your mailing contacts database for future email marketing campaigns.
-\ n
+\n
 - Old-time customers will be happy to be notified of things that interest them - and most importantly, if you can expect what they want in advance.
-\ n
+\n
 - You can use email to solicit feedback from your contacts about your shopping or customer service experience and respond directly to them. If you know what worked well and what failed, you can offer solutions to their problems, or simply thank them for choosing to buy from you.
-\ n
+\n
    </string>
 
     <string-array name = "topic_strategy_task">
@@ -662,7 +662,7 @@ How do you do that?
        </item>
         <item>2. Don\'t forget who your target audience is</item>
         <item>3. Create interest</item>
-        <item>4. Another important tip is to incorporate Call-To-Action content. Calls to action are short statements aimed at convincing a site visitor to perform a particular action, so it is worthwhile to put them in the most creative and compelling way. An example of a call to action can be \ "go ahead, work \" or \ "sign up today \".</item>
+        <item>4. Another important tip is to incorporate Call-To-Action content. Calls to action are short statements aimed at convincing a site visitor to perform a particular action, so it is worthwhile to put them in the most creative and compelling way. An example of a call to action can be: \"go ahead, work\" or \"sign up today\".</item>
         <item>Serious investment in social media activity requires a lot of work, and anyone who doesn\'t have a clear plan can lose focus very quickly.
 <![CDATA[<br>]]>
 It is not easy to keep up-to-date with the materials, answer and network with friends, or keep thinking of new, unique and interesting ideas for publications on several networks.
@@ -687,7 +687,7 @@ Social media management tools such as Hootsuite, Buffer and Everypost can be use
             <![CDATA[<a href = "https://hootsuite.com/">Third option: hootsuite</a>]]>
 
             <![CDATA[<br>]]>
-            <![CDATA[<a href = "https://www.wordstream.com/blog/ws/2018/01/17/best-free-social-media-management-tools">You can also find more tools here < / a>]]>
+            <![CDATA[<a href = "https://www.wordstream.com/blog/ws/2018/01/17/best-free-social-media-management-tools">You can also find more tools here </a>]]>
 
        </item>
         <item>
@@ -946,9 +946,10 @@ As you work on your business, we set tasks together. So that we can help you kee
     <string name = "audience_exist">Where it is: </string>
 
     <string name = "my_belive_phrasing">
-        As you formulate the "I believe" of the business, note that you are referring to the following:
+        <![CDATA[<br>]]>
+As you formulate the \"I believe\" of the business, note that you are referring to the following:
         <![CDATA[<br>]]>
-        Goals:
+Goals:
         <![CDATA[<br>]]>
     </string>
 
@@ -1008,5 +1009,12 @@ As you work on your business, we set tasks together. So that we can help you kee
     <string name="finish_button">Finish</string>
     <string name="fill_here">Your answer here</string>
     <string name="updating_progress">Updating progress</string>
+
+    <string name="login_message">You have to logIn if you want keep using the application!</string>
+    <string name="login_no">I dont want, enough</string>
+    <string name="login_ok">OK, lets sign in</string>
+
+    <string name="login_title">מתחבר</string>
+    <string name="login_body">בודקים אם יש עדכונים.. כמה שניות</string>
 
 </resources>

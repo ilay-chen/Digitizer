@@ -72,6 +72,10 @@ public class appData extends Application {
     static String[] topics, subtitle, ids;
     private static DatabaseReference mDatabase;
     public static GoogleAccountCredential mCredential;
+    public static String userDataPath = "/data/";
+    public static String userTaskPath = "/progress/";
+    public static String userRootPath;
+    public static userData mUserData;
     private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY, CalendarScopes.CALENDAR };
 
     @Override
@@ -92,11 +96,6 @@ public class appData extends Application {
         //Intent serviceIntent = new Intent(this, scheduledService.class);
         //this.startService(serviceIntent);
 
-        PeriodicWorkRequest periodicWorkRequest =
-                new PeriodicWorkRequest.Builder(serverWorker.class, 24, TimeUnit.HOURS)
-                        .addTag("server")
-                        .build();
-
         PeriodicWorkRequest.Builder myWorkBuilder =
                 new PeriodicWorkRequest.Builder(serverWorker.class, 24, TimeUnit.HOURS);
 
@@ -105,6 +104,11 @@ public class appData extends Application {
                 .enqueueUniquePeriodicWork("server", ExistingPeriodicWorkPolicy.KEEP, myWork);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null) {
+            userRootPath = "users/" + user.getUid();
+            userDataPath = userRootPath + "/data/";
+            userTaskPath = userRootPath + "/progress/";
+        }
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
         Boolean firstTime = sharedPref.getBoolean("firstTime", true);
         //if(user!=null && user.getDisplayName()!=null && !firstTime)
@@ -383,7 +387,7 @@ public class appData extends Application {
             //allTasks.addTopic(new topicTasks(tasks,text,extra,i,topics[i], subtitle[i],i));
         }
         saveData(c);
-        update();
+        //update();
     }
 
     static public void update()
