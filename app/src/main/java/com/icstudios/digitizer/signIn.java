@@ -43,11 +43,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.icstudios.digitizer.onboarding.OnboardingActivity;
 
 import java.util.Arrays;
@@ -277,117 +272,60 @@ public class signIn extends AppCompatActivity {
         }
     }
 
-    public void readDataFromUser(final Context c)
-    {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-
-        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                marketingTasks tempTask = new marketingTasks();
-                //appData.allTasks = new marketingTasks();
-                //ArrayList<topicTasks> allt = dataSnapshot.child("allTopics").getValue(ArrayList<topicTasks>);
-                //int j = 0;
-                for (DataSnapshot task : dataSnapshot.child("allTopics").getChildren())
-                {
-                    tempTask.addTopic(task.getValue(topicTasks.class));
-                }
-                if(tempTask.allTopics.size()!=0)
-                    appData.allTasks = tempTask;
-
-                appData.saveData(c);
-                Intent a = new Intent(c,mainNav.class);
-                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                c.startActivity(a);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        //readData(c);
-    }
-
-    public void startMarketing()
-    {
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
-        Boolean firstTime = sharedPref.getBoolean("firstTime", true);
-
-        if(firstTime)
-        //if(true)
-        {
-            if(appData.allTasks==null)
-                appData.initTasks(this);
-
-            appData.readData(this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("firstTime",false);
-            editor.apply();
-        }
-        else {
-            appData.readData(this);
-            appData.updateStrings(this);
-        }
-
-
-    }
-
-    public void signOut() {
-        // [START auth_fui_signout]
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-        // [END auth_fui_signout]
-    }
-
-    public void delete() {
-        // [START auth_fui_delete]
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-        // [END auth_fui_delete]
-    }
-
-    public void themeAndLogo() {
-        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-
-        // [START auth_fui_theme_logo]
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        //.setLogo(R.drawable.my_great_logo)      // Set logo drawable
-                        //.setTheme(R.style.MySuperAppTheme)      // Set theme
-                        .build(),
-                RC_SIGN_IN);
-        // [END auth_fui_theme_logo]
-    }
-
-    public void privacyAndTerms() {
-        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-        // [START auth_fui_pp_tos]
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTosAndPrivacyPolicyUrls(
-                                "https://example.com/terms.html",
-                                "https://example.com/privacy.html")
-                        .build(),
-                RC_SIGN_IN);
-        // [END auth_fui_pp_tos]
-    }
+//    public void signOut() {
+//        // [START auth_fui_signout]
+//        AuthUI.getInstance()
+//                .signOut(this)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        // ...
+//                    }
+//                });
+//        // [END auth_fui_signout]
+//    }
+//
+//    public void delete() {
+//        // [START auth_fui_delete]
+//        AuthUI.getInstance()
+//                .delete(this)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        // ...
+//                    }
+//                });
+//        // [END auth_fui_delete]
+//    }
+//
+//    public void themeAndLogo() {
+//        List<AuthUI.IdpConfig> providers = Collections.emptyList();
+//
+//        // [START auth_fui_theme_logo]
+//        startActivityForResult(
+//                AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setAvailableProviders(providers)
+//                        //.setLogo(R.drawable.my_great_logo)      // Set logo drawable
+//                        //.setTheme(R.style.MySuperAppTheme)      // Set theme
+//                        .build(),
+//                RC_SIGN_IN);
+//        // [END auth_fui_theme_logo]
+//    }
+//
+//    public void privacyAndTerms() {
+//        List<AuthUI.IdpConfig> providers = Collections.emptyList();
+//        // [START auth_fui_pp_tos]
+//        startActivityForResult(
+//                AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setAvailableProviders(providers)
+//                        .setTosAndPrivacyPolicyUrls(
+//                                "https://example.com/terms.html",
+//                                "https://example.com/privacy.html")
+//                        .build(),
+//                RC_SIGN_IN);
+//        // [END auth_fui_pp_tos]
+//    }
 
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =

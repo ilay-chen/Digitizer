@@ -47,7 +47,7 @@ public class serverWorker extends Worker {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             readData(getApplicationContext());
-            UserManager.Companion.update(getApplicationContext(), true);
+            UserManager.Companion.update(getApplicationContext(), false);
             return Result.success();
         }
         return Result.failure();

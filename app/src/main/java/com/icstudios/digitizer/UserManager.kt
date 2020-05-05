@@ -395,6 +395,7 @@ class UserManager(var context: Context) : LifecycleObserver {
                 val scheduledDate = Calendar.getInstance()
                 allTasks.setLastUpdate(scheduledDate.time.time)
                 mDatabase.setValue(allTasks)
+                mUserData = userData(user.displayName)
 
 //                mDatabase = FirebaseDatabase.getInstance().getReference(userDataPath)
 //                var user = userData(user.displayName)

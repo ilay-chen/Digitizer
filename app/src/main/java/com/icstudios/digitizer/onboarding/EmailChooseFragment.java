@@ -434,40 +434,4 @@ public class EmailChooseFragment extends Fragment {
     }
     // [END auth_fui_result]
 
-    public void readDataFromUser(final Context c)
-    {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(appData.userTaskPath);
-
-        //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                appData.allTasks = new marketingTasks();
-                //ArrayList<topicTasks> allt = dataSnapshot.child("allTopics").getValue(ArrayList<topicTasks>);
-                //int j = 0;
-                for (DataSnapshot task : dataSnapshot.child("allTopics").getChildren())
-                {
-                    appData.allTasks.addTopic(task.getValue(topicTasks.class));
-
-                }
-                //appData.allTasks = dataSnapshot.child("allTopics").getValue(marketingTasks.class);
-                //appData.allTasks = new marketingTasks(allt);
-                for(DataSnapshot datas: dataSnapshot.getChildren()){
-                    //appData.allTasks = (marketingTasks) datas.child("allTopics").getValue();
-                }
-
-                appData.saveData(c);
-                Intent a = new Intent(c,mainNav.class);
-                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                c.startActivity(a);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        //readData(c);
-    }
-
 }
