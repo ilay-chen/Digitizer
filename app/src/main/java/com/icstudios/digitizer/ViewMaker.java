@@ -278,7 +278,7 @@ public class ViewMaker {
                 allTv[i].et.get(0).setText(result.get(0));
         }
 
-        allTv[i].makeEnabled(currentTopic.tasks.get(i).isDone);
+        //allTv[i].makeEnabled(currentTopic.tasks.get(i).isDone);
         allTv[i].inn.invalidate();
     }
 
@@ -392,7 +392,7 @@ public class ViewMaker {
 
                 }
 
-                allTv[i].makeEnabled(isChecked);
+                allTv[i].makeEnabled(allTv[i].task.isChecked());
             }
         });
 

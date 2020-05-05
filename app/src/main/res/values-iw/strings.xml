@@ -1014,11 +1014,20 @@
     <string name="fill_here">מלא כאן</string>
     <string name="updating_progress">מעדכן התקדמות</string>
 
-    <string name="login_message">You have to logIn if you want keep using the application!</string>
-    <string name="login_no">I dont want, enough</string>
-    <string name="login_ok">OK, lets sign in</string>
+    <string name="validation_message">הרשיון שלך פג.. אנא הקלד אחד חדש כדי להמשיך לדאוג לעסק שלך!</string>
+    <string name="enter_validation">הקלתי, בואו נמשיך</string>
+    <string name="buy_validation">אני רוצה לקנות רשיון חדש</string>
+    <string name="close_validation">אני לא רוצה לקנות.. סיימתי לקדם את העסק שלי</string>
+    <string name="edit_text_validation">הכנס כאן את הקוד החדש שלך</string>
+
 
     <string name="login_title">מתחבר</string>
     <string name="login_body">בודקים אם יש עדכונים.. כמה שניות</string>
+
+    <string name="validation_title">מוודא</string>
+    <string name="validation_body">בודק את הקוד שהזנת</string>
+
+    <string name="validation_complete_title">מזל טוב! אתה יכול להמשיך לקדם את העסק שלך. תאריך התפוגה החדש שלך הוא: </string>
+    <string name="validation_complete_ok">תודה!</string>
 
 </resources>

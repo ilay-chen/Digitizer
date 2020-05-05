@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class userData {
     public String name;
     public long expireTime;
-    public String privateCode;
+    public String validationCode;
 
     public userData(){
 
@@ -18,6 +18,15 @@ public class userData {
         this.expireTime = scheduledDate.getTime().getTime();
     }
 
+    public Boolean setValidation(String validationCode, int month)
+    {
+        this.validationCode = validationCode;
+        Calendar scheduledDate = Calendar.getInstance();
+        scheduledDate.add(Calendar.MONTH, month);
+        this.expireTime = scheduledDate.getTime().getTime();
+        return null;
+    }
+
     public String getName() {
         return name;
     }
@@ -26,12 +35,12 @@ public class userData {
         this.name = name;
     }
 
-    public void setPrivateCode(String privateCode) {
-        this.privateCode = privateCode;
+    public void setValidationCode(String validationCode) {
+        this.validationCode = validationCode;
     }
 
-    public String getPrivateCode() {
-        return privateCode;
+    public String getValidationCode() {
+        return validationCode;
     }
 
     public long getExpireTime() {

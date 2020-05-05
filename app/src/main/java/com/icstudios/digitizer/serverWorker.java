@@ -47,8 +47,7 @@ public class serverWorker extends Worker {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             readData(getApplicationContext());
-            mDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
-            mDatabase.setValue(allTasks);
+            UserManager.Companion.update(getApplicationContext(), true);
             return Result.success();
         }
         return Result.failure();
@@ -97,7 +96,7 @@ public class serverWorker extends Worker {
                 super.onPostExecute(s);
                 if (s.equals(Result.success())) {
                     //result = s;
-                    sendNotification(s.toString());
+                    //sendNotification(s.toString());
                 }
                 //getResultsFromApi();
             }

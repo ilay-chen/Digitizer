@@ -302,11 +302,13 @@ public class EmailChooseFragment extends Fragment {
         @Override
         protected void onPostExecute(String output) {
             //autoSingIn();
-            new deleteEvent(output).execute();
+            if(output!=null) {
+                new deleteEvent(output).execute();
+            }
             mProgress.dismiss();
             accountChoose = true;
             OnboardingActivity.next.setEnabled(true);
-            ((OnboardingActivity)getActivity()).onProgress(3);
+            ((OnboardingActivity) getActivity()).onProgress(3);
             email.setText(getString(R.string.mail_choose) + mCredential.getSelectedAccountName());
         }
 
@@ -378,6 +380,7 @@ public class EmailChooseFragment extends Fragment {
                 mService.events().insert(calendarId, event).setSendNotifications(true).execute();
             return EventId;
         } catch (IOException e) {
+            EventId = null;
             e.printStackTrace();
             startActivityForResult(
                     ((UserRecoverableAuthIOException) e).getIntent(),

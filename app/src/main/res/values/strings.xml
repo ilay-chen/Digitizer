@@ -1010,11 +1010,21 @@ Goals:
     <string name="fill_here">Your answer here</string>
     <string name="updating_progress">Updating progress</string>
 
-    <string name="login_message">You have to logIn if you want keep using the application!</string>
-    <string name="login_no">I dont want, enough</string>
-    <string name="login_ok">OK, lets sign in</string>
+    <string name="validation_message">Your user validation has expired, please enter a new one!</string>
+    <string name="enter_validation">I entered my new validation key</string>
+    <string name="buy_validation">I want to buy a new validation</string>
+    <string name="close_validation">I don\'t want to buy another one… exit the application</string>
+    <string name="edit_text_validation">Enter your new key here</string>
 
-    <string name="login_title">מתחבר</string>
-    <string name="login_body">בודקים אם יש עדכונים.. כמה שניות</string>
+
+
+    <string name="login_title">connecting</string>
+    <string name="login_body">check if there is updates.. wait few seconds</string>
+
+    <string name="validation_title">checking</string>
+    <string name="validation_body">check if your validation valid</string>
+
+    <string name="validation_complete_title">congratulations! You can keep further on your business. Your new expire date is: </string>
+    <string name="validation_complete_ok">Thank you!</string>
 
 </resources>
