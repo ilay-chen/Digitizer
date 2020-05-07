@@ -106,7 +106,7 @@ public class signIn extends AppCompatActivity {
 
             askPremission();
 
-            getResultsFromApi();
+//            getResultsFromApi();
 
             //startMarketing();
 
@@ -132,27 +132,27 @@ public class signIn extends AppCompatActivity {
 
     }
 
-    private GoogleSignInClient buildGoogleSignInClient() {
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(CalendarScopes.CALENDAR_READONLY))
-                .requestIdToken("AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g")
-                .requestServerAuthCode("AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g")
-                .requestEmail()
-                .build();
-        return GoogleSignIn.getClient(this, signInOptions);
-    }
+//    private GoogleSignInClient buildGoogleSignInClient() {
+//        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestScopes(new Scope(CalendarScopes.CALENDAR_READONLY))
+//                .requestIdToken("AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g")
+//                .requestServerAuthCode("AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g")
+//                .requestEmail()
+//                .build();
+//        return GoogleSignIn.getClient(this, signInOptions);
+//    }
 
-    public void autoSingIn(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null && user.getDisplayName()!=null)
-        {
-            Intent a = new Intent(getApplicationContext(),mainNav.class);
-            a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(a);
-
-            finishAffinity();
-        }
-    }
+//    public void autoSingIn(){
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if(user!=null && user.getDisplayName()!=null)
+//        {
+//            Intent a = new Intent(getApplicationContext(),mainNav.class);
+//            a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(a);
+//
+//            finishAffinity();
+//        }
+//    }
 
 
     public void createSignInIntent() {
@@ -216,21 +216,21 @@ public class signIn extends AppCompatActivity {
                     //getResultsFromApi();
                 }
                 break;
-            case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
-                    }
-                }
-                break;
+//            case REQUEST_ACCOUNT_PICKER:
+//                if (resultCode == RESULT_OK && data != null &&
+//                        data.getExtras() != null) {
+//                    String accountName =
+//                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+//                    if (accountName != null) {
+//                        SharedPreferences settings = this.getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+//                        editor.apply();
+//                        mCredential.setSelectedAccountName(accountName);
+//                        getResultsFromApi();
+//                    }
+//                }
+//                break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
                     //getResultsFromApi();
@@ -259,7 +259,7 @@ public class signIn extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
-                    getResultsFromApi();
+//                    getResultsFromApi();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(signIn.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
@@ -327,23 +327,23 @@ public class signIn extends AppCompatActivity {
 //        // [END auth_fui_pp_tos]
 //    }
 
-    private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
-    }
+//    private boolean isGooglePlayServicesAvailable() {
+//        GoogleApiAvailability apiAvailability =
+//                GoogleApiAvailability.getInstance();
+//        final int connectionStatusCode =
+//                apiAvailability.isGooglePlayServicesAvailable(this);
+//        return connectionStatusCode == ConnectionResult.SUCCESS;
+//    }
+//
+//    private void acquireGooglePlayServices() {
+//        GoogleApiAvailability apiAvailability =
+//                GoogleApiAvailability.getInstance();
+//        final int connectionStatusCode =
+//                apiAvailability.isGooglePlayServicesAvailable(this);
+//        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+//            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+//        }
+//    }
 
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
@@ -355,40 +355,40 @@ public class signIn extends AppCompatActivity {
         dialog.show();
     }
 
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
+//    private boolean isDeviceOnline() {
+//        ConnectivityManager connMgr =
+//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+//        return (networkInfo != null && networkInfo.isConnected());
+//    }
+//
+//    private void chooseAccount() {
+//        SharedPreferences sharedPref = this.getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
+//        String accountName = sharedPref.getString(PREF_ACCOUNT_NAME, null);
+//        //String accountName = getPreferences(Context.MODE_PRIVATE)
+//               // .getString(PREF_ACCOUNT_NAME, null);
+//        if (accountName != null) {
+//            mCredential.setSelectedAccountName(accountName);
+//            getResultsFromApi();
+//        } else {
+//            // Start a dialog from which the user can choose an account
+//            startActivityForResult(
+//                    mCredential.newChooseAccountIntent(),
+//                    REQUEST_ACCOUNT_PICKER);
+//        }
+//    }
 
-    private void chooseAccount() {
-        SharedPreferences sharedPref = this.getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
-        String accountName = sharedPref.getString(PREF_ACCOUNT_NAME, null);
-        //String accountName = getPreferences(Context.MODE_PRIVATE)
-               // .getString(PREF_ACCOUNT_NAME, null);
-        if (accountName != null) {
-            mCredential.setSelectedAccountName(accountName);
-            getResultsFromApi();
-        } else {
-            // Start a dialog from which the user can choose an account
-            startActivityForResult(
-                    mCredential.newChooseAccountIntent(),
-                    REQUEST_ACCOUNT_PICKER);
-        }
-    }
-
-    private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
-            acquireGooglePlayServices();
-        } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
-        } else if (! isDeviceOnline()) {
-            //mOutputText.setText("No network connection available.");
-        } else {
-            new signIn.MakeRequestTask(mCredential, this).execute();
-        }
-    }
+//    private void getResultsFromApi() {
+//        if (! isGooglePlayServicesAvailable()) {
+//            acquireGooglePlayServices();
+//        } else if (mCredential.getSelectedAccountName() == null) {
+//            chooseAccount();
+//        } else if (! isDeviceOnline()) {
+//            //mOutputText.setText("No network connection available.");
+//        } else {
+//            new signIn.MakeRequestTask(mCredential, this).execute();
+//        }
+//    }
 
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
 

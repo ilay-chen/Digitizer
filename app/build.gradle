@@ -67,7 +67,7 @@ dependencies {
                 exclude group: "com.google.code.findbugs", module: "jsr305"
             }
     androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

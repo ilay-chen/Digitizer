@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.AsyncTask
-import android.service.autofill.UserData
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -58,7 +57,9 @@ class UserManager(var context: Context) : LifecycleObserver {
         }
 
         fun update(context: Context, logOut : Boolean) {
-            proDialog = ProgressDialog.show(context, context.getString(R.string.logout_text), context.getString(R.string.updating_progress))
+            if(logOut)
+                proDialog = ProgressDialog.show(context, context.getString(R.string.logout_text), context.getString(R.string.updating_progress))
+
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
                 readData(context)
@@ -120,17 +121,24 @@ class UserManager(var context: Context) : LifecycleObserver {
                                 mDatabase.setValue(mUserData)
 
                                 //Invoke the interface
-                                if (!init)
-                                    mListener.callback(true, mUserData.expireTime)
-                                else userValidation()
+//                                if (!init)
+                                mListener.callback(true, mUserData.expireTime)
+//                                else {
+//                                    val ft = (context as FragmentActivity).supportFragmentManager
+//
+//                                    val newFragment: DialogFragment = validationComplete.newInstance(mUserData.expireTime)
+//                                    newFragment.isCancelable = false
+//                                    newFragment.show(ft, "completeValidation")
+////                                    userValidation()
+//                                }
                                 break
                         }
                     }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    if(!init)
-                        mListener.callback(false, 0)
+//                    if(!init)
+                    mListener.callback(false, 0)
                 }
             })
 
@@ -172,12 +180,12 @@ class UserManager(var context: Context) : LifecycleObserver {
                         mUserData = dataSnapshot.child("data").getValue(userData::class.java)!!
                         if(mUserData.isExpire)
                         {
-                            Companion.proDialog!!.dismiss()
+                            proDialog!!.dismiss()
                             //TODO user out of date
                             Toast.makeText(context, "user Expire", Toast.LENGTH_LONG).show()
                             val ft: FragmentManager = (signIn.getContext() as FragmentActivity).supportFragmentManager
 
-                            val newFragment: DialogFragment = ValidationFragment.newInstance(signIn.getContext() as FragmentActivity?)
+                            val newFragment: DialogFragment = ValidationFragment.newInstance(signIn.getContext() as FragmentActivity?, false)
                             newFragment.isCancelable = false
                             newFragment.show(ft, "signIn")
 //                        AuthUI.getInstance()
@@ -399,7 +407,12 @@ class UserManager(var context: Context) : LifecycleObserver {
 
 //                mDatabase = FirebaseDatabase.getInstance().getReference(userDataPath)
 //                var user = userData(user.displayName)
-                setValidation(null,  true)
+
+                val ft: FragmentManager = (signIn.getContext() as FragmentActivity).supportFragmentManager
+
+                val newFragment: DialogFragment = ValidationFragment.newInstance(signIn.getContext() as FragmentActivity?, true)
+                newFragment.isCancelable = false
+                newFragment.show(ft, "signIn")
 //                mDatabase.setValue(user)
 //
 //                userValidation()

@@ -21,18 +21,19 @@ import org.jetbrains.annotations.Nullable;
 public class ValidationFragment extends DialogFragment implements UserManager.MyListener {
 
     private static FragmentActivity myContext;
+    private static Boolean init = false;
 
     public ValidationFragment()
     {
 
     }
 
-    public static ValidationFragment newInstance(FragmentActivity myContext) {
+    public static ValidationFragment newInstance(FragmentActivity myContext, Boolean init) {
         // Required empty public constructor
         ValidationFragment frag = new ValidationFragment();
         ValidationFragment.myContext = myContext;
         Bundle args = new Bundle();
-        args.putBoolean("popup", true);
+        args.putBoolean("init", init);
         frag.setArguments(args);
         return frag;
     }
@@ -40,11 +41,44 @@ public class ValidationFragment extends DialogFragment implements UserManager.My
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            init = args.getBoolean("init", false);
+        }
         setShowsDialog(true);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        UserManager.Companion.setCustomEventListener(new UserManager.MyListener() {
+            @Override
+            public void callback(@Nullable Boolean success, long time) {
+                if (success)
+                {
+                    FragmentManager ft  = myContext.getSupportFragmentManager();
+
+                    DialogFragment newFragment = validationComplete.newInstance(time);
+                    newFragment.setCancelable(false);
+                    newFragment.show(ft, "completeValidation");
+                }
+                else
+                {
+                    Toast.makeText(signIn.context, "Not valid", Toast.LENGTH_LONG).show();
+                    //UserManager.Companion.logout(signIn.context);
+                    FragmentManager ft  = myContext.getSupportFragmentManager();
+
+                    DialogFragment newFragment = ValidationFragment.newInstance(myContext, false);
+                    newFragment.setCancelable(false);
+                    newFragment.show(ft, "setValidation");
+                }
+            }
+        });
+
+        if(init)
+        {
+            UserManager.Companion.setValidation(null,  init);
+        }
 
         // Set an EditText view to get user input
         final EditText input = new EditText(getContext());
@@ -80,31 +114,8 @@ public class ValidationFragment extends DialogFragment implements UserManager.My
 //                        };
 
 //                        thread.start();
+
                         UserManager.Companion.setValidation(input.getText().toString(),false);
-
-                        UserManager.Companion.setCustomEventListener(new UserManager.MyListener() {
-                            @Override
-                            public void callback(@Nullable Boolean success, long time) {
-                                if (success)
-                                {
-                                    FragmentManager ft  = myContext.getSupportFragmentManager();
-
-                                    DialogFragment newFragment = validationComplete.newInstance(time);
-                                    newFragment.setCancelable(false);
-                                    newFragment.show(ft, "completeValidation");
-                                }
-                                else
-                                {
-                                    Toast.makeText(signIn.context, "Not valid", Toast.LENGTH_LONG).show();
-                                    //UserManager.Companion.logout(signIn.context);
-                                    FragmentManager ft  = myContext.getSupportFragmentManager();
-
-                                    DialogFragment newFragment = ValidationFragment.newInstance(myContext);
-                                    newFragment.setCancelable(false);
-                                    newFragment.show(ft, "setValidation");
-                                }
-                            }
-                        });
                     }
                 })
                 .setNeutralButton(R.string.buy_validation, new DialogInterface.OnClickListener() {
