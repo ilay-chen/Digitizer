@@ -111,6 +111,8 @@ public class appData extends Application {
         }
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("strings", MODE_PRIVATE);
         Boolean firstTime = sharedPref.getBoolean("firstTime", true);
+
+//        UserManager.Companion.initListener();
         //if(user!=null && user.getDisplayName()!=null && !firstTime)
         //   checkProgress(this, -1);
 

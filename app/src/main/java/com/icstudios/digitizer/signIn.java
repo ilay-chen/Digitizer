@@ -102,7 +102,14 @@ public class signIn extends AppCompatActivity {
              */
         }
         else {
-            ProcessLifecycleOwner.get().getLifecycle().addObserver(new UserManager(this));
+            //UserManager.Companion.userConnection();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            UserManager.Companion.setUserManagerForActivity(this);
+            if (user != null) {
+                UserManager.Companion.userConnected(user);
+            }
+
+            //ProcessLifecycleOwner.get().getLifecycle().addObserver(new UserManager());
 
             askPremission();
 
@@ -201,9 +208,9 @@ public class signIn extends AppCompatActivity {
                 if(resultCode == RESULT_OK) {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if(user!=null) {
-                        appData.userRootPath = "users/" + user.getUid();
+                        //appData.userRootPath = "users/" + user.getUid();
+                        UserManager.Companion.userConnected(user);
                     }
-
 //                    Intent a = new Intent(getApplicationContext(),mainNav.class);
 //                    a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                    startActivity(a);
@@ -456,9 +463,5 @@ public class signIn extends AppCompatActivity {
             }
 
         }
-    }
-    static public Context getContext()
-    {
-        return context;
     }
 }

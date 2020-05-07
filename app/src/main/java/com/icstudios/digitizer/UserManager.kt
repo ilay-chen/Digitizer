@@ -1,5 +1,6 @@
 package com.icstudios.digitizer
 
+//import com.icstudios.digitizer.signIn.context
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.AuthUI.IdpConfig.GoogleBuilder
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
@@ -27,20 +29,26 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.icstudios.digitizer.appData.*
-import com.icstudios.digitizer.signIn.context
 import java.util.*
 
 
-class UserManager(var context: Context) : LifecycleObserver {
-    lateinit var listener : AuthStateListener
+class UserManager : LifecycleObserver {
 
     companion object {
+        lateinit var activity : Activity
+        lateinit var listener : AuthStateListener
         lateinit var mListener: MyListener
         var proDialog: ProgressDialog? = null
         var mService: com.google.api.services.calendar.Calendar? = null
         val PREF_ACCOUNT_NAME = "accountName"
+
+        fun setUserManagerForActivity(activity: Activity)
+        {
+            this.activity = activity
+        }
 
         fun logout(context: Context) {
             AuthUI.getInstance()
@@ -49,9 +57,9 @@ class UserManager(var context: Context) : LifecycleObserver {
                         override fun onComplete(task: Task<Void?>) {
                             if(proDialog!=null && proDialog!!.isShowing)
                                 proDialog!!.dismiss()
-                            val a = Intent(context, signIn::class.java)
+                            val a = Intent(activity, signIn::class.java)
                             a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            context.startActivity(a)
+                            activity.startActivity(a)
                         }
                     })
         }
@@ -79,7 +87,7 @@ class UserManager(var context: Context) : LifecycleObserver {
 
         fun setValidation(validationCode: String?, init : Boolean)
         {
-            proDialog = ProgressDialog.show(context, context.getString(R.string.validation_title), context.getString(R.string.validation_body))
+            proDialog = ProgressDialog.show(activity, activity.getString(R.string.validation_title), activity.getString(R.string.validation_body))
 
             var validationCode: String? = validationCode
             val ml : MyListener
@@ -163,8 +171,7 @@ class UserManager(var context: Context) : LifecycleObserver {
         }
 
         fun userValidation(): Boolean? {
-            context = signIn.getContext()
-            proDialog = ProgressDialog.show(context, context.getString(R.string.login_title), context.getString(R.string.login_body))
+            proDialog = ProgressDialog.show(activity, activity.getString(R.string.login_title), activity.getString(R.string.login_body))
 
             val databaseReference = FirebaseDatabase.getInstance().reference.child(userRootPath)
 
@@ -182,10 +189,10 @@ class UserManager(var context: Context) : LifecycleObserver {
                         {
                             proDialog!!.dismiss()
                             //TODO user out of date
-                            Toast.makeText(context, "user Expire", Toast.LENGTH_LONG).show()
-                            val ft: FragmentManager = (signIn.getContext() as FragmentActivity).supportFragmentManager
+                            Toast.makeText(activity, "user Expire", Toast.LENGTH_LONG).show()
+                            val ft: FragmentManager = (activity as FragmentActivity).supportFragmentManager
 
-                            val newFragment: DialogFragment = ValidationFragment.newInstance(signIn.getContext() as FragmentActivity?, false)
+                            val newFragment: DialogFragment = ValidationFragment.newInstance(activity as FragmentActivity?, false)
                             newFragment.isCancelable = false
                             newFragment.show(ft, "signIn")
 //                        AuthUI.getInstance()
@@ -198,7 +205,7 @@ class UserManager(var context: Context) : LifecycleObserver {
 //                                })
                         }
                         else {
-                            readData(context)
+                            readData(activity)
                             var time = dataSnapshot.child("progress").child("lastUpdate").value as Long
 
                             if(!allTasks.isUpToDate(time))
@@ -207,10 +214,10 @@ class UserManager(var context: Context) : LifecycleObserver {
                                 for (task in dataSnapshot.child("progress").child("allTopics").children) {
                                     allTasks.addTopic(task.getValue(topicTasks::class.java))
                                 }
-                                saveData(context)
+                                saveData(activity)
                             }
-                            readData(context)
-                            updateStrings(context)
+                            readData(activity)
+                            updateStrings(activity)
                             getResultsFromApi()
                         }
                     }
@@ -223,13 +230,13 @@ class UserManager(var context: Context) : LifecycleObserver {
 
         private fun isGooglePlayServicesAvailable(): Boolean {
             val apiAvailability = GoogleApiAvailability.getInstance()
-            val connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(context)
+            val connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(activity)
             return connectionStatusCode == ConnectionResult.SUCCESS
         }
 
         private fun acquireGooglePlayServices() {
             val apiAvailability = GoogleApiAvailability.getInstance()
-            val connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(context)
+            val connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(activity)
             if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
                 showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
             }
@@ -239,20 +246,20 @@ class UserManager(var context: Context) : LifecycleObserver {
                 connectionStatusCode: Int) {
             val apiAvailability = GoogleApiAvailability.getInstance()
             val dialog = apiAvailability.getErrorDialog(
-                    context as Activity?,
+                    activity as Activity?,
                     connectionStatusCode,
                     mainNav.REQUEST_GOOGLE_PLAY_SERVICES)
             dialog.show()
         }
 
         private fun isDeviceOnline(): Boolean {
-            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connMgr = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
 
         private fun chooseAccount() {
-            val sharedPref: SharedPreferences = context.getApplicationContext().getSharedPreferences("strings", Context.MODE_PRIVATE)
+            val sharedPref: SharedPreferences = activity.getApplicationContext().getSharedPreferences("strings", Context.MODE_PRIVATE)
             val accountName = sharedPref.getString(PREF_ACCOUNT_NAME, null)
             //String accountName = getPreferences(Context.MODE_PRIVATE)
             // .getString(PREF_ACCOUNT_NAME, null);
@@ -261,7 +268,7 @@ class UserManager(var context: Context) : LifecycleObserver {
                 getResultsFromApi()
             } else {
                 // Start a dialog from which the user can choose an account
-                (context as Activity).startActivityForResult(
+                (activity).startActivityForResult(
                         mCredential.newChooseAccountIntent(),
                         mainNav.REQUEST_ACCOUNT_PICKER)
             }
@@ -275,7 +282,7 @@ class UserManager(var context: Context) : LifecycleObserver {
             } else if (!isDeviceOnline()) {
                 //mOutputText.setText("No network connection available.");
             } else {
-                MakeRequestTask(mCredential, context as Activity).execute()
+                MakeRequestTask(mCredential, activity).execute()
             }
         }
 
@@ -306,9 +313,11 @@ class UserManager(var context: Context) : LifecycleObserver {
 
             override fun onPostExecute(output: List<String>?) {
                 proDialog!!.dismiss()
-                val a = Intent(signIn.getContext(), mainNav::class.java)
+                val a = Intent(activity, mainNav::class.java)
                 a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                signIn.getContext().startActivity(a)
+                activity.startActivity(a)
+//                FirebaseAuth.getInstance().removeAuthStateListener(listener)
+                (activity).finishAffinity()
                 //autoSingIn();
                 //appData.checkProgress(context, -1, activity);
             }
@@ -322,7 +331,7 @@ class UserManager(var context: Context) : LifecycleObserver {
                                 (mLastError as GooglePlayServicesAvailabilityIOException)
                                         .connectionStatusCode)
                     } else if (mLastError is UserRecoverableAuthIOException) {
-                        (signIn.getContext() as Activity).startActivityForResult(
+                        (activity).startActivityForResult(
                                 (mLastError as UserRecoverableAuthIOException).intent,
                                 mainNav.REQUEST_AUTHORIZATION)
                     } else {
@@ -338,7 +347,7 @@ class UserManager(var context: Context) : LifecycleObserver {
                     connectionStatusCode: Int) {
                 val apiAvailability = GoogleApiAvailability.getInstance()
                 val dialog = apiAvailability.getErrorDialog(
-                        (signIn.getContext() as Activity),
+                        (activity),
                         connectionStatusCode,
                         mainNav.REQUEST_GOOGLE_PLAY_SERVICES)
                 dialog.show()
@@ -349,7 +358,7 @@ class UserManager(var context: Context) : LifecycleObserver {
                 val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
                 mService = com.google.api.services.calendar.Calendar.Builder(
                         transport, jsonFactory, credential)
-                        .setApplicationName(signIn.context.getString(R.string.app_name))
+                        .setApplicationName(activity.getString(R.string.app_name))
                         .build()
                 this.activity = activity
             }
@@ -373,7 +382,10 @@ class UserManager(var context: Context) : LifecycleObserver {
                     saveData(context)
                     val a = Intent(context, mainNav::class.java)
                     a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    FirebaseAuth.getInstance().removeAuthStateListener(listener)
+
                     context.startActivity(a)
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {}
@@ -385,7 +397,7 @@ class UserManager(var context: Context) : LifecycleObserver {
         {
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
-                appData.readData(context)
+                appData.readData(activity)
                 var mDatabase = FirebaseDatabase.getInstance().getReference(userTaskPath)
                 val scheduledDate = Calendar.getInstance()
                 appData.allTasks.setLastUpdate(scheduledDate.time.time)
@@ -395,10 +407,10 @@ class UserManager(var context: Context) : LifecycleObserver {
 
         fun initUser()
         {
-            initTasks(context)
+            initTasks(activity)
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
-                readData(context)
+                readData(activity)
                 var mDatabase = FirebaseDatabase.getInstance().getReference(userTaskPath)
                 val scheduledDate = Calendar.getInstance()
                 allTasks.setLastUpdate(scheduledDate.time.time)
@@ -408,9 +420,9 @@ class UserManager(var context: Context) : LifecycleObserver {
 //                mDatabase = FirebaseDatabase.getInstance().getReference(userDataPath)
 //                var user = userData(user.displayName)
 
-                val ft: FragmentManager = (signIn.getContext() as FragmentActivity).supportFragmentManager
+                val ft: FragmentManager = (activity as FragmentActivity).supportFragmentManager
 
-                val newFragment: DialogFragment = ValidationFragment.newInstance(signIn.getContext() as FragmentActivity?, true)
+                val newFragment: DialogFragment = ValidationFragment.newInstance(activity as FragmentActivity?, true)
                 newFragment.isCancelable = false
                 newFragment.show(ft, "signIn")
 //                mDatabase.setValue(user)
@@ -430,23 +442,36 @@ class UserManager(var context: Context) : LifecycleObserver {
 
             }
         }
-    }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun userConnection() {
-        listener = AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user == null) { // Sign in logic here.
-//                val ft =
-//                        (activity as FragmentActivity).supportFragmentManager
-//                val newFragment: DialogFragment = SignInFragment.newInstance()
-//                newFragment.isCancelable = false
-//                newFragment.show(ft, "signIn")
+//        fun initListener()
+//        {
+//            listener = AuthStateListener { firebaseAuth ->
+//                val user = firebaseAuth.currentUser
+//                if (user == null) { // Sign in logic here.
+////                val ft =
+////                        (activity as FragmentActivity).supportFragmentManager
+////                val newFragment: DialogFragment = SignInFragment.newInstance()
+////                newFragment.isCancelable = false
+////                newFragment.show(ft, "signIn")
 //                val a = Intent(activity, signIn::class.java)
 //                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 //                activity.startActivity(a)
-            }
-            else {
+//                }
+//                else {
+//                    userConnected(user)
+//                }
+//            }
+//
+//            FirebaseAuth.getInstance().addAuthStateListener(listener)
+//        }
+//
+//        fun detach() {
+//            FirebaseAuth.getInstance().removeAuthStateListener(listener)
+//        }
+
+        fun userConnected(user : FirebaseUser)
+        {
+            if(user!=null) {
                 userRootPath = "users/" + user.uid
                 userDataPath = "$userRootPath/data/"
                 userTaskPath = "$userRootPath/progress/"
@@ -454,21 +479,53 @@ class UserManager(var context: Context) : LifecycleObserver {
             }
         }
 
-        FirebaseAuth.getInstance().addAuthStateListener(listener)
+//        fun createSignInIntent() {
+//            // [START auth_fui_create_intent]
+//            // Choose authentication providers
+//            val providers = Arrays.asList( /*new AuthUI.IdpConfig.EmailBuilder().build(),*/
+//                    GoogleBuilder().build())
+//
+//            // Create and launch sign-in intent
+//            activity.startActivityForResult(
+//                    AuthUI.getInstance()
+//                            .createSignInIntentBuilder()
+//                            .setAvailableProviders(providers)
+//                            .build(),
+//                    signIn.RC_SIGN_IN)
+//            // [END auth_fui_create_intent]
+//        }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun detach() {
-        FirebaseAuth.getInstance().removeAuthStateListener(listener)
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun detachh() {
-        FirebaseAuth.getInstance().removeAuthStateListener(listener)
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun detachhh() {
-        FirebaseAuth.getInstance().removeAuthStateListener(listener)
-    }
+//    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+//    fun userConnection() {
+//        listener = AuthStateListener { firebaseAuth ->
+//            val user = firebaseAuth.currentUser
+//            if (user == null) { // Sign in logic here.
+////                val a = Intent(activity, signIn::class.java)
+////                a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+////                activity.startActivity(a)
+//                createSignInIntent()
+//            }
+//            else {
+//
+//            }
+//        }
+//
+//        FirebaseAuth.getInstance().addAuthStateListener(listener)
+//    }
+
+//    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+//    fun detach() {
+//        FirebaseAuth.getInstance().removeAuthStateListener(listener)
+//    }
+//    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+//    fun detachh() {
+//        FirebaseAuth.getInstance().removeAuthStateListener(listener)
+//    }
+//    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+//    fun detachhh() {
+//        FirebaseAuth.getInstance().removeAuthStateListener(listener)
+//    }
 
     interface MyListener {
         // you can define any parameter as per your requirement

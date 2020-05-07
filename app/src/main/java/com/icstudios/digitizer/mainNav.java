@@ -73,6 +73,8 @@ public class mainNav extends AppCompatActivity{
 
         setContentView(R.layout.activity_main_nav);
 
+        UserManager.Companion.setUserManagerForActivity(this);
+
         context = this;
 
         data = (appData) getApplication();
