@@ -1,11 +1,15 @@
 package com.icstudios.digitizer;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -14,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -23,6 +28,7 @@ import static com.google.android.gms.common.util.CollectionUtils.listOf;
 
 public class taskView {
     public TextView tv;
+    public Button moreInfo;
     public CheckBox task;
     public CheckBox [] cbsList;
     public ArrayList<EditText> et;
@@ -32,11 +38,12 @@ public class taskView {
     public int radioSize;
     public ArrayList<String> removedLines;
     LinearLayout noteLayout;
-    LinearLayout innerNoteLayout;
+    LinearLayout taskLayout;
     ScrollView scrollNote;
     Typeface face;
     Button add;
     ArrayList<Button> removeButtons;
+    Boolean isGone = true;
 
     public void makeEnabled(Boolean enable)
     {
@@ -98,7 +105,7 @@ public class taskView {
         //inn.setOrientation(LinearLayout.VERTICAL);
 
         //this.inn.addView(this.tv);
-        this.innerNoteLayout.addView(this.task);
+        this.taskLayout.addView(this.task);
     }
     public taskView(TextView tv, CheckBox task, String [] cbsList, Context c)
     {
@@ -118,7 +125,7 @@ public class taskView {
         //inn.setOrientation(LinearLayout.VERTICAL);
 
         //this.inn.addView(this.tv);
-        this.innerNoteLayout.addView(this.task);
+        this.taskLayout.addView(this.task);
         addCheckboxs(cbsList, c);
     }
     public taskView(TextView tv, CheckBox task, String [] cbsList, Context c, int radioSize)
@@ -138,7 +145,7 @@ public class taskView {
         //inn.setOrientation(LinearLayout.VERTICAL);
 
         //this.inn.addView(this.tv);
-        this.innerNoteLayout.addView(this.task);
+        this.taskLayout.addView(this.task);
         this.radioSize = radioSize;
         addRadioButton(cbsList, c);
     }
@@ -192,8 +199,8 @@ public class taskView {
         innerNoteLayout.setOrientation(LinearLayout.VERTICAL);
 */
         //innerNoteLayout.addView(this.tv);
-        innerNoteLayout.addView(this.task);
-        innerNoteLayout.addView(this.et.get(0));
+        taskLayout.addView(this.task);
+        taskLayout.addView(this.et.get(0));
 
         //noteLayout.addView(innerNoteLayout, innerNoteParams);
         //this.inn.addView(frame2, layoutParams);
@@ -227,7 +234,7 @@ public class taskView {
         //inn.setOrientation(LinearLayout.VERTICAL);
 
         //this.inn.addView(this.tv);
-        this.innerNoteLayout.addView(this.task);
+        this.taskLayout.addView(this.task);
 
         int button = 0;
         for (int i = 0; i < size; i++) {
@@ -243,20 +250,106 @@ public class taskView {
          */
     }
 
-    public void essential(TextView tv, Context c)
+    public void essential(TextView newTv, Context c)
     {
-        this.tv = tv;
+        this.tv = newTv;
         this.tv.setMovementMethod(LinkMovementMethod.getInstance());
+
+        final LinearLayout infoLayout = new LinearLayout(c);
+        infoLayout.setOrientation(LinearLayout.VERTICAL);
+        final LinearLayout innerNoteLayout = new LinearLayout(c);
+        innerNoteLayout.setOrientation(LinearLayout.VERTICAL);
+
+        moreInfo = new Button(c);
+        moreInfo.setText("מידע נוסף");
+        moreInfo.setBackgroundResource(R.drawable.button_skype_rectangle_background);
+        moreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isGone)
+                {
+                    int[] location = new int[2];
+                    moreInfo.getLocationOnScreen(location);
+                    int y = location[1];
+                    //taskLayout.setY(100);
+                    taskLayout.setTop(-100);
+                    taskLayout.animate().translationY(tv.getHeight()).start();
+                    if(tv.getVisibility()==View.GONE) {
+
+//                        int[] location = new int[2];
+//                        moreInfo.getLocationOnScreen(location);
+//                        moreInfo.getY();
+//                        int y = 800 - location[1];
+//                        taskLayout.setY(taskLayout.getY() - tv.getHeight());
+                    }
+//                    int[] location = new int[2];
+//                    moreInfo.getLocationOnScreen(location);
+//                    int y = 800 - location[1];
+//                    taskLayout.setY(y-50);
+//                    taskLayout.animate().translationY(tv.getMinimumHeight()/3.0f).setDuration(500).start();
+
+//                    tv.setVisibility(View.VISIBLE);
+//                    taskLayout.animate().translationY(-tv.getHeight());
+                    isGone = false;
+//                    tv.setAlpha(0.0F);
+//                    tv.setVisibility(View.VISIBLE);
+                    tv.animate()
+                            //.translationY(-tv.getHeight())
+                            .alpha(1.0f)
+                            .setDuration(500)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                }
+                            });
+//                    taskLayout.animate()
+//                            .translationY(tv.getHeight())
+//                            .alpha(1.0f)
+//                            .setDuration(500)
+//                            .setListener(new AnimatorListenerAdapter() {
+//                                @Override
+//                                public void onAnimationEnd(Animator animation) {
+//                                    super.onAnimationEnd(animation);
+//                                    //innerNoteLayout.setVisibility(View.VISIBLE);
+//                                }
+//                            });
+                }
+                else
+                {
+                    isGone=true;
+                    //tv.setVisibility(View.VISIBLE);
+                    //taskLayout.animate().translationY(tv.getHeight()/3f);
+                    taskLayout.animate().translationY(-tv.getHeight()).setDuration(500).start();
+
+                    tv.animate()
+                            //.translationY(tv.getMinimumHeight()/3f)
+                            .setDuration(500)
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+//                                    tv.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                }
+            }
+        });
 
         face = Typeface.createFromAsset(c.getAssets(),
                 "Alef.ttf");
-        tv.setTypeface(face);
+        this.tv.setTypeface(face);
         this.tv.setTextSize(20);
         this.tv.setTextColor(c.getResources().getColor(R.color.colorPrimary));
+        this.tv.setAlpha(0.0f);
 
+//        this.tv.setVisibility(View.GONE);
+
+        //taskLayout.animate().translationY(tv.getHeight());
+        isGone = true;
 
         this.inn = new LinearLayout(c);
-
 
         LinearLayout.LayoutParams noteParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -272,10 +365,24 @@ public class taskView {
 
         scrollNote = new ScrollView(c);
 
-        innerNoteLayout = new LinearLayout(c);
-        innerNoteLayout.setOrientation(LinearLayout.VERTICAL);
+        this.taskLayout = new LinearLayout(c);
+        this.taskLayout.setOrientation(LinearLayout.VERTICAL);
+        this.taskLayout.setY(50);
+        int[] location = new int[2];
+        moreInfo.getLocationOnScreen(location);
+        int y = location[1];
+        //taskLayout.setY(100);
+        //taskLayout.setTop(-100);
 
-        innerNoteLayout.addView(this.tv);
+        //this.taskLayout.setBackgroundResource(R.drawable.task_layout_background);
+
+        //innerNoteLayout.addView(this.moreInfo);
+        //innerNoteLayout.addView(this.tv);
+        infoLayout.addView(this.moreInfo);
+        infoLayout.addView(this.tv);
+
+        innerNoteLayout.addView(infoLayout);
+        innerNoteLayout.addView(taskLayout);
 
         scrollNote.addView(innerNoteLayout);
 
@@ -292,7 +399,7 @@ public class taskView {
             cbsList[j] = new CheckBox(c);
             cbsList[j].setText(data[j]);
             cbsList[j].setTextSize(20);
-            innerNoteLayout.addView(cbsList[j]);
+            taskLayout.addView(cbsList[j]);
         }
     }
 
@@ -322,7 +429,7 @@ public class taskView {
                     }
                 });
 
-        innerNoteLayout.addView(radiogroup);
+        taskLayout.addView(radiogroup);
     }
 
     public void addPages(Context c)
@@ -341,7 +448,7 @@ public class taskView {
 
         final LinearLayout horiz = new LinearLayout(c);
         horiz.setOrientation(LinearLayout.HORIZONTAL);
-        innerNoteLayout.addView(horiz);
+        taskLayout.addView(horiz);
 
         final EditText et = new EditText(c);
         et.setHint(hint);
@@ -377,7 +484,7 @@ public class taskView {
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeLine(innerNoteLayout, horiz, et);
+                    removeLine(taskLayout, horiz, et);
                 }
             });
             horiz.addView(remove);
@@ -397,7 +504,7 @@ public class taskView {
                         result.remove(j);
                         task.setResult(result);
                     }
-                    innerNoteLayout.removeView(addedLayout.get(j));
+                    taskLayout.removeView(addedLayout.get(j));
                     this.et.remove(j);
                     addedLayout.remove(j);
                 }
@@ -430,10 +537,10 @@ public class taskView {
         horiz.addView(et);
 
         if(index>=addedLayout.size())
-            innerNoteLayout.addView(horiz);
+            taskLayout.addView(horiz);
         else {
-            innerNoteLayout.removeView(addedLayout.get(index));
-            innerNoteLayout.addView(horiz, index+2);
+            taskLayout.removeView(addedLayout.get(index));
+            taskLayout.addView(horiz, index+2);
         }
 
         if(button==1) {
@@ -457,7 +564,7 @@ public class taskView {
             remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeLine(innerNoteLayout, horiz, et);
+                    removeLine(taskLayout, horiz, et);
                 }
             });
             horiz.addView(remove);
@@ -484,7 +591,7 @@ public class taskView {
     public void removeEditText()
     {
         if(et.size()!=0 && et.get(0)!=null) {
-            innerNoteLayout.removeView(et.get(0));
+            taskLayout.removeView(et.get(0));
             this.et.remove(0);
         }
     }
@@ -496,7 +603,7 @@ public class taskView {
                 "GveretLevin.ttf");
         newEt.setTypeface(face);
             this.et.add(newEt);
-            innerNoteLayout.addView(et.get(0));
+            taskLayout.addView(et.get(0));
         }
         //innerNoteLayout.addView(newEt);
         et.get(0).requestFocus();

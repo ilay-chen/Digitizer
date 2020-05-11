@@ -88,7 +88,12 @@ public class ViewMaker {
         if(appData.checkTopicPos()<=currentPos)
             fab.setVisibility(View.GONE);
 
-        allLayouts.add(new taskView(new TextView(context), context, currentTopic.subtitle).inn);
+        taskView intro = new taskView(new TextView(context), context, currentTopic.subtitle);
+        intro.tv.setAlpha(1.0f);
+        intro.moreInfo.setVisibility(View.GONE);
+        //taskLayout.animate().translationY(-tv.getHeight()).setDuration(500).start();
+
+        allLayouts.add(intro.inn);
 
         for(int i = 0; i < currentTopic.tasks.size(); i++) {
             final String extra = currentTopic.tasks.get(i).extraDetail;
@@ -121,6 +126,14 @@ public class ViewMaker {
 
             //allTv[i].inn.setPadding(50,80,50,80);
             allLayouts.add(allTv[i].inn);
+
+            int[] location = new int[2];
+//            allTv[i].moreInfo.getLocationOnScreen(location);
+//            allTv[i].moreInfo.getLocationInWindow(location);
+//            int y =  location[1];
+//            allTv[i].taskLayout.setY(200);
+
+
             //ll.addView(allTv[i].inn);
             //lls[i] = new LinearLayout(context);
             //lls[i].setOrientation(LinearLayout.VERTICAL);
@@ -138,7 +151,6 @@ public class ViewMaker {
             updateEditText(i);
         }
         allTv[pageIndex].removedLines = new ArrayList<String>();
-
         //ll.addView(NavLayout);
 
         //setContentView(sv);
@@ -573,6 +585,15 @@ public class ViewMaker {
         }
         if(!text.equals("empty"))
             allTv[i].tv.setText(Html.fromHtml(text));
+
+        if (allTv[i].tv.getText().toString().equals(""))
+            allTv[i].moreInfo.setVisibility(View.GONE);
+        else allTv[i].moreInfo.setVisibility(View.VISIBLE);
+        int a = -allTv[i].tv.getHeight();
+
+        allTv[i].taskLayout.setTop(a);
+        //allTv[i].taskLayout.animate().translationY(-100).start();
+
         allTv[i].inn.invalidate();
     }
 
