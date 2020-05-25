@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#8B4513</color>
+    <color name="colorPrimaryDark">#D2691E</color>
+    <color name="colorAccent">#F4A460</color>
+
+    <color name="platte1">#ffffff</color>
+    <color name="platte2">#ececec</color>
+    <color name="platte3">#e1e1e1</color>
+    <color name="platte4">#d0d0d0</color>
+    <color name="note">#FFFF66</color>
+
+    <!--
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+
+    <color name="colorPrimary">#a7e9af</color>
+    <color name="colorPrimaryDark">#75b79e</color>
+    <color name="colorAccent">#eef9bf</color>
+
+    <color name="platte1">#6a8caf</color>
+    <color name="platte2">#75b79e</color>
+    <color name="platte3">#a7e9af</color>
+    <color name="platte4">#eef9bf</color>
+    -->
+</resources>

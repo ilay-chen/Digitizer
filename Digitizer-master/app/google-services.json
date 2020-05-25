@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_number": "1052859989459",
+    "firebase_url": "https://icmarketingassistent.firebaseio.com",
+    "project_id": "icmarketingassistent",
+    "storage_bucket": "icmarketingassistent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052859989459:android:c9b8b14058391005e14326",
+        "android_client_info": {
+          "package_name": "com.icstudios.digitizer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052859989459-dkv3j2l2piunij95p0g79fe58or9bgcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icstudios.digitizer",
+            "certificate_hash": "775b3c888124e626e4e584d737b0135e009bcdb2"
+          }
+        },
+        {
+          "client_id": "1052859989459-86csv8o2m2uh8vuhdst8lcqjqocu06lo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052859989459-86csv8o2m2uh8vuhdst8lcqjqocu06lo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052859989459:android:e1c88db34aa2fa6ce14326",
+        "android_client_info": {
+          "package_name": "com.icstudios.marketingassistent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052859989459-hnj6tu56ef8t5iuf4la9lu5tqoultdj8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icstudios.marketingassistent",
+            "certificate_hash": "5a91fdc4424c0cb59ced4a88f87a17b3c731db9a"
+          }
+        },
+        {
+          "client_id": "1052859989459-1k6aq2m25u4rpnhdc9llg99atd5175c8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icstudios.marketingassistent",
+            "certificate_hash": "775b3c888124e626e4e584d737b0135e009bcdb2"
+          }
+        },
+        {
+          "client_id": "1052859989459-3507l2fj09re4rhteem0j51404is8e5r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icstudios.marketingassistent",
+            "certificate_hash": "7702a75be1e1c596b36b59e7912c784f9520f0df"
+          }
+        },
+        {
+          "client_id": "1052859989459-86csv8o2m2uh8vuhdst8lcqjqocu06lo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr9m8GRgbYMkQwsAdK--yDxvczW4PaM3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052859989459-86csv8o2m2uh8vuhdst8lcqjqocu06lo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

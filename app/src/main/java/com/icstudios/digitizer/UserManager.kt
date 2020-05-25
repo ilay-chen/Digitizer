@@ -185,7 +185,7 @@ class UserManager : LifecycleObserver {
                     }
                     else {
                         mUserData = dataSnapshot.child("data").getValue(userData::class.java)!!
-                        if(mUserData.isExpire)
+                        if(/*mUserData.isExpire*/false)
                         {
                             proDialog!!.dismiss()
                             //TODO user out of date

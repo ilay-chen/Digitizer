@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -15,12 +17,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 
@@ -33,13 +38,13 @@ public class taskView {
     public CheckBox [] cbsList;
     public ArrayList<EditText> et;
     public ArrayList<LinearLayout> addedLayout;
-    public LinearLayout inn;
+    public ConstraintLayout inn;
     public RadioGroup radiogroup;
     public int radioSize;
     public ArrayList<String> removedLines;
     LinearLayout noteLayout;
     LinearLayout taskLayout;
-    ScrollView scrollNote;
+    RelativeLayout scrollNote;
     Typeface face;
     Button add;
     ArrayList<Button> removeButtons;
@@ -84,13 +89,13 @@ public class taskView {
 
     public taskView(TextView tv, Context c, String text)
     {
-        essential(tv, c);
-        tv.setText(text);
+        essential(c);
+        this.tv.setText(text);
     }
 
     public taskView(TextView tv, CheckBox task, Context c)
     {
-        essential(tv, c);
+        essential(c);
         //this.tv = tv;
         //this.tv.setMovementMethod(LinkMovementMethod.getInstance());
         this.task = task;
@@ -109,7 +114,7 @@ public class taskView {
     }
     public taskView(TextView tv, CheckBox task, String [] cbsList, Context c)
     {
-        essential(tv, c);
+        essential(c);
         //this.tv = tv;
         //this.tv.setMovementMethod(LinkMovementMethod.getInstance());
         this.task = task;
@@ -130,7 +135,7 @@ public class taskView {
     }
     public taskView(TextView tv, CheckBox task, String [] cbsList, Context c, int radioSize)
     {
-        essential(tv, c);
+        essential(c);
 
         this.task = task;
         this.et = new ArrayList<EditText>();
@@ -151,7 +156,7 @@ public class taskView {
     }
     public taskView(TextView tv, CheckBox task, EditText et, Context c)
     {
-        essential(tv, c);
+        essential(c);
 
         //this.tv = tv;
         //this.tv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -212,7 +217,7 @@ public class taskView {
     }
     public taskView(TextView tv, CheckBox task, int size, Context c, String hint) {
 
-        essential(tv, c);
+        essential(c);
         //this.tv = tv;
         //this.tv.setMovementMethod(LinkMovementMethod.getInstance());
         this.task = task;
@@ -250,51 +255,36 @@ public class taskView {
          */
     }
 
-    public void essential(TextView newTv, Context c)
+    public void essential(Context c)
     {
-        this.tv = newTv;
+        View myLayout = LayoutInflater.from(c).inflate(R.layout.task_fragment,null);
+        c.getResources().getLayout(R.layout.task_fragment);
+        this.tv = myLayout.findViewById(R.id.explanation);
         this.tv.setMovementMethod(LinkMovementMethod.getInstance());
 
-        final LinearLayout infoLayout = new LinearLayout(c);
-        infoLayout.setOrientation(LinearLayout.VERTICAL);
-        final LinearLayout innerNoteLayout = new LinearLayout(c);
-        innerNoteLayout.setOrientation(LinearLayout.VERTICAL);
+        taskLayout = myLayout.findViewById(R.id.task_view);
+        scrollNote = myLayout.findViewById(R.id.scroll_view);
 
-        moreInfo = new Button(c);
+        moreInfo = myLayout.findViewById(R.id.more_info);
         moreInfo.setText("מידע נוסף");
         moreInfo.setBackgroundResource(R.drawable.button_skype_rectangle_background);
         moreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tv.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY);
+                taskLayout.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY);
+
                 if(isGone)
                 {
-                    int[] location = new int[2];
-                    moreInfo.getLocationOnScreen(location);
-                    int y = location[1];
-                    //taskLayout.setY(100);
-                    taskLayout.setTop(-100);
-                    taskLayout.animate().translationY(tv.getHeight()).start();
-                    if(tv.getVisibility()==View.GONE) {
 
-//                        int[] location = new int[2];
-//                        moreInfo.getLocationOnScreen(location);
-//                        moreInfo.getY();
-//                        int y = 800 - location[1];
-//                        taskLayout.setY(taskLayout.getY() - tv.getHeight());
-                    }
-//                    int[] location = new int[2];
-//                    moreInfo.getLocationOnScreen(location);
-//                    int y = 800 - location[1];
-//                    taskLayout.setY(y-50);
-//                    taskLayout.animate().translationY(tv.getMinimumHeight()/3.0f).setDuration(500).start();
+                    scrollNote.setLayoutParams(new FrameLayout.LayoutParams(scrollNote.getLayoutParams().width, /*tv.getHeight() + taskLayout.getHeight() + 500*/ scrollNote.getHeight() + taskLayout.getHeight()));
+                    scrollNote.invalidate();
 
-//                    tv.setVisibility(View.VISIBLE);
-//                    taskLayout.animate().translationY(-tv.getHeight());
+
+                    taskLayout.animate().translationY(tv.getHeight()).setDuration(500).start();
+
                     isGone = false;
-//                    tv.setAlpha(0.0F);
-//                    tv.setVisibility(View.VISIBLE);
                     tv.animate()
-                            //.translationY(-tv.getHeight())
                             .alpha(1.0f)
                             .setDuration(500)
                             .setListener(new AnimatorListenerAdapter() {
@@ -303,27 +293,14 @@ public class taskView {
                                     super.onAnimationEnd(animation);
                                 }
                             });
-//                    taskLayout.animate()
-//                            .translationY(tv.getHeight())
-//                            .alpha(1.0f)
-//                            .setDuration(500)
-//                            .setListener(new AnimatorListenerAdapter() {
-//                                @Override
-//                                public void onAnimationEnd(Animator animation) {
-//                                    super.onAnimationEnd(animation);
-//                                    //innerNoteLayout.setVisibility(View.VISIBLE);
-//                                }
-//                            });
                 }
                 else
                 {
                     isGone=true;
-                    //tv.setVisibility(View.VISIBLE);
-                    //taskLayout.animate().translationY(tv.getHeight()/3f);
-                    taskLayout.animate().translationY(-tv.getHeight()).setDuration(500).start();
+
+                    taskLayout.animate().translationY(0).setDuration(500).start();
 
                     tv.animate()
-                            //.translationY(tv.getMinimumHeight()/3f)
                             .setDuration(500)
                             .alpha(0.0f)
                             .setListener(new AnimatorListenerAdapter() {
@@ -331,6 +308,14 @@ public class taskView {
                                 public void onAnimationEnd(Animator animation) {
                                     super.onAnimationEnd(animation);
 //                                    tv.setVisibility(View.INVISIBLE);
+
+                                    scrollNote.setLayoutParams(new FrameLayout.LayoutParams(scrollNote.getLayoutParams().width, /*tv.getHeight() + taskLayout.getHeight() + 500*/ scrollNote.getHeight() - taskLayout.getHeight()));
+                                    scrollNote.invalidate();
+                                    int k = scrollNote.getLayoutParams().height;
+                                    if( k > 0)
+                                    {
+
+                                    }
                                 }
                             });
                 }
@@ -344,12 +329,7 @@ public class taskView {
         this.tv.setTextColor(c.getResources().getColor(R.color.colorPrimary));
         this.tv.setAlpha(0.0f);
 
-//        this.tv.setVisibility(View.GONE);
-
-        //taskLayout.animate().translationY(tv.getHeight());
         isGone = true;
-
-        this.inn = new LinearLayout(c);
 
         LinearLayout.LayoutParams noteParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -359,37 +339,8 @@ public class taskView {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         innerNoteParams.setMargins(60, 270, 60, 80);
 
-        noteLayout = new LinearLayout(c);
-        noteLayout.setOrientation(LinearLayout.VERTICAL);
-        noteLayout.setBackgroundResource(R.drawable.pinnote7);
-
-        scrollNote = new ScrollView(c);
-
-        this.taskLayout = new LinearLayout(c);
         this.taskLayout.setOrientation(LinearLayout.VERTICAL);
-        this.taskLayout.setY(50);
-        int[] location = new int[2];
-        moreInfo.getLocationOnScreen(location);
-        int y = location[1];
-        //taskLayout.setY(100);
-        //taskLayout.setTop(-100);
-
-        //this.taskLayout.setBackgroundResource(R.drawable.task_layout_background);
-
-        //innerNoteLayout.addView(this.moreInfo);
-        //innerNoteLayout.addView(this.tv);
-        infoLayout.addView(this.moreInfo);
-        infoLayout.addView(this.tv);
-
-        innerNoteLayout.addView(infoLayout);
-        innerNoteLayout.addView(taskLayout);
-
-        scrollNote.addView(innerNoteLayout);
-
-        noteLayout.addView(scrollNote, innerNoteParams);
-        //this.inn.addView(frame2, layoutParams);
-        this.inn.addView(noteLayout, noteParams);
-        this.inn.setBackgroundResource(R.drawable.boardbackground2);
+        this.inn = (ConstraintLayout)myLayout;
     }
 
     public void addCheckboxs(String []data, Context c)

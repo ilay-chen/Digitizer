@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,7 +42,7 @@ public class ViewMaker {
     ArrayList<String> pages;
     int pageIndex = 0;
     Context context;
-    public ArrayList<LinearLayout> allLayouts = new ArrayList<>();
+    public ArrayList<ConstraintLayout> allLayouts = new ArrayList<>();
 
     int currentPos;
     public static ArrayList<String> removedLines;
@@ -58,7 +59,7 @@ public class ViewMaker {
 
     }
 
-    public ArrayList<LinearLayout> getViews()
+    public ArrayList<ConstraintLayout> getViews()
     {
         ArrayList<String> result;
 
@@ -589,9 +590,9 @@ public class ViewMaker {
         if (allTv[i].tv.getText().toString().equals(""))
             allTv[i].moreInfo.setVisibility(View.GONE);
         else allTv[i].moreInfo.setVisibility(View.VISIBLE);
-        int a = -allTv[i].tv.getHeight();
+        //int a = -allTv[i].tv.getHeight();
 
-        allTv[i].taskLayout.setTop(a);
+        //allTv[i].taskLayout.setTop(a);
         //allTv[i].taskLayout.animate().translationY(-100).start();
 
         allTv[i].inn.invalidate();

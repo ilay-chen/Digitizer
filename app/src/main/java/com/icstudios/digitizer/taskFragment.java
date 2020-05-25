@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -26,7 +27,7 @@ public class taskFragment extends Fragment {
     ViewMaker vm;
     ViewPager mViewPager;
     ViewPager2 mViewPager2;
-    ArrayList<LinearLayout> allLayouts;
+    ArrayList<ConstraintLayout> allLayouts;
     String []titles;
     String currentTopic;
     Button next, previous;
